@@ -4736,6 +4736,8 @@ html[data-src="a"] .ctl-top-h{font:600 24px/32px Inter,system-ui,sans-serif;lett
 :where(html[data-src="b"]) .a6-bi{width:40px;height:40px;border-radius:var(--radius-md);background:var(--accent-subtle);color:var(--primary);display:grid;place-items:center;flex:none}
 :where(html[data-src="b"]) .a6-bt{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
 :where(html[data-src="b"]) .a6-fill{flex:none;gap:6px}
+html[data-src="b"] .a6-gh .a6-gok{width:32px;height:32px;color:#fff;border:1px solid #3186DF;background:#3186DF;border-radius:8px}
+html[data-src="b"] .a6-gh .a6-gok:hover{background:#2474C7;border-color:#2474C7}
 :where(html[data-src="b"]) .a6-bt b{font-size:15px;font-weight:600}
 :where(html[data-src="b"]) .a6-bt span{font-size:13px;color:var(--text-secondary)}
 :where(html[data-src="b"]) .a6-chip{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);font-size:11.5px;font-weight:600;letter-spacing:.4px;color:var(--text-secondary);white-space:nowrap}
@@ -20364,7 +20366,7 @@ function a6Table(items){
 
 /* ---------- builder page ---------- */
 function a6Open(k){ const live = k && a6Rules()[k], dr = k && a6Drafts()[k], r = dr || live;
-  S._a6 = {k:k || '', cfg:r ? JSON.parse(JSON.stringify(r)) : a6Base([], null, '', 0), showErr:false, note:'', open:{}, setOpen:false, act:r ? -1 : 0, status:dr ? (live ? 'pending' : 'draft') : live ? 'live' : 'new'};
+  S._a6 = {k:k || '', cfg:r ? JSON.parse(JSON.stringify(r)) : a6Base([], {mode:'approve', levels:[{who:[]}]}, '', 0), showErr:false, note:'', open:{}, setOpen:false, act:r ? -1 : 0, status:dr ? (live ? 'pending' : 'draft') : live ? 'live' : 'new'};
   S._a6.base = JSON.stringify(S._a6.cfg); S._a6.baseK = S._a6.k; }
 function a6BuilderView(){
   const ed = S.route.ed; if (!S._a6 || (ed !== 'new' && S._a6.k !== ed && S._a6.baseK !== ed)) a6Open(ed === 'new' ? '' : ed);
@@ -20403,6 +20405,7 @@ function a6Builder(st){
     return `${gi ? `<div class="a6-sep" aria-hidden="true"><span>If not, check the next group</span></div>` : ''}
       <section class="a6-grp${B(`g${gi}`) ? ' bad' : ''}" style="--gc:${col}" data-a6g="${gi}" aria-label="Group ${gi + 1}">
         <div class="a6-gh"><span class="a6-gchip">Group ${gi + 1}</span>${a5ErrHtml(B(`g${gi}`))}<span class="spacer"></span>
+          <button class="iconbtn sm a6-gok" data-act="a6-gdone" data-g="${gi}" aria-label="Done with group ${gi + 1}" title="Done">${I('tick',16)}</button>
           <button class="iconbtn sm" data-act="a6-gmove" data-g="${gi}" data-d="-1" aria-label="Move group up" ${gi ? '' : 'disabled'}>${I('up',15)}</button><button class="iconbtn sm" data-act="a6-gmove" data-g="${gi}" data-d="1" aria-label="Move group down" ${gi < n - 1 ? '' : 'disabled'}>${I('down',15)}</button>
           <button class="iconbtn sm" data-act="a6-gdup" data-g="${gi}" aria-label="Duplicate group" ${n < A6_MAX_GROUPS ? '' : 'disabled'}>${h2Ph('dup',15)}</button><button class="iconbtn sm" data-act="a6-gdel" data-g="${gi}" aria-label="Delete group">${h2Ph('trash',15)}</button>
           <span class="a6-drag" draggable="true" data-g="${gi}" title="Drag to reorder" aria-hidden="true">${h2Ph('grip', 16)}</span></div>
@@ -20474,8 +20477,19 @@ function a6Sample(k){
   const g1 = rest.slice(0, 2), g2 = lim.length ? lim.slice(0, 1) : rest.slice(2, 3);
   return {groups:[g1.length ? a6G('any', g1, [['role:mgr'], ['role:md']]) : null, g2.length ? a6G('all', g2, [['role:mgr']]) : null].filter(Boolean), other:{mode:'approve', levels:[{who:['role:mgr']}]}};
 }
-function a6NewCond(ak, f){ const k = f || (A5_FIELDS[ak] || [])[0], F = A5F[k]; return F && F.type === 'rolelim' ? a6CL(k) : a6C(k, F && F.type === 'num' ? 'gt' : 'any', ''); }
-function a6SetAct(k){ const had = a6Has(k); a6Open(k); if (had) S._a6.note = `${a5Act(k).name} already has ${a6Rules()[k] ? 'a rule' : 'a draft'}, so you’re editing it.`; else { S._a6.baseK = ''; S._a6.cfg.groups = [a6G('all', [a6NewCond(k)], [[]])]; S._a6.open = {g0c0:true}; S._a6.act = 0; } a6Re('#a6-act'); }
+/* close the group being edited into its readable summary; with errors it stays open and shows them */
+function a6GroupClose(gi, show){ const st = S._a6; if (!st || st.act !== gi) return false; const g = st.cfg.groups[gi]; if (!g) return false;
+  const errs = !g.conds.length || g.conds.some(a6CondErr) || g.levels.some(l => !(l.who || []).length);
+  if (errs){ if (show){ toast('Finish this group first: what to check, and who approves.', 'info'); } return false; }
+  st.act = -1; st.open = {}; return true; }
+/* …and it closes on its own when you click anywhere outside it */
+document.addEventListener('click', e => { const st = S._a6; if (S.route.v !== 'appr6' || !st || st.act < 0 || !document.contains(e.target)) return;
+  const t = e.target; if (!t.closest || t.closest(`.a6-grp[data-a6g="${st.act}"]`) || t.closest('#a5-pop,#ds-pop,.ds-pop,#menu,.menu,#h2-pop,#overlay,.a6-cf,.toasts,#toasts')) return;
+  if (t.closest('[data-act="a6-gedit"]')) return;
+  if (t.closest('[data-act]') && !t.closest('.a6-card')) return;   // buttons such as Publish do their own thing
+  if (a6GroupClose(st.act, false)) render(); });
+function a6NewCond(ak, f){ const k = f || '', F = A5F[k]; /* empty until the user picks what to check */ return F && F.type === 'rolelim' ? a6CL(k) : a6C(k, F && F.type === 'num' ? 'gt' : 'any', ''); }
+function a6SetAct(k){ const had = a6Has(k); a6Open(k); if (had) S._a6.note = `${a5Act(k).name} already has ${a6Rules()[k] ? 'a rule' : 'a draft'}, so you’re editing it.`; else { S._a6.baseK = ''; S._a6.cfg.groups = [a6G('all', [a6NewCond(k)], [[]])]; S._a6.open = {g0c0:true}; S._a6.act = 0; S._a6.cfg.other = {mode:'approve', levels:[{who:[]}]}; } a6Re('#a6-act'); }
 CHG['a6-act'] = t => { const k = t.value, st = S._a6;
   if (st.k && JSON.stringify(st.cfg) !== st.base){ t.value = st.k; S._a6Then = () => a6SetAct(k);
     return openDialog('Change the action?', `<p class="b3" style="margin:0">The groups you set for ${esc(a5Act(st.k).name)} will be cleared.</p>`, `<button class="btn btn-sec" data-act="close">Keep them</button><button class="btn btn-pri" data-act="a6-leave-ok">Change action</button>`); }
@@ -20524,6 +20538,7 @@ Object.assign(ACT, {
   'a6-esc': () => { const T = S._a6.cfg.timing; T.escOn = !T.escOn; a6Re('[data-act="a6-esc"]'); },
   'a6-reason': () => { S._a6.cfg.reason = !S._a6.cfg.reason; a6Re('[data-act="a6-reason"]'); },
   'a6-gadd': () => { const G = S._a6.cfg.groups; G.push(a6G('all', [a6NewCond(S._a6.k)], [[]])); const gi = G.length - 1; S._a6.open = {}; S._a6.open[`g${gi}c0`] = true; S._a6.act = gi; a6Re(`[data-chg="a6-cf"][data-g="${gi}"][data-c="0"]`); },
+  'a6-gdone': t => { if (!a6GroupClose(+t.dataset.g, true)) return; a6Re(`[data-act="a6-gedit"][data-g="${t.dataset.g}"]`); },
   'a6-gedit': t => { S._a6.act = +t.dataset.g; S._a6.open = {}; a6Re(`[data-act="a6-cadd"][data-g="${t.dataset.g}"]`); },
   'a6-gdel': t => { if (S._a6.act === +t.dataset.g) S._a6.act = -1; else if (S._a6.act > +t.dataset.g) S._a6.act--; S._a6.cfg.groups.splice(+t.dataset.g, 1); a6ReOpen(); a6Re('[data-act="a6-gadd"]'); },
   'a6-gdup': t => { const G = S._a6.cfg.groups, gi = +t.dataset.g; G.splice(gi + 1, 0, JSON.parse(JSON.stringify(G[gi]))); a6ReOpen(); a6Re(`[data-act="a6-gdup"][data-g="${gi + 1}"]`); },
