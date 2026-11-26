@@ -18986,7 +18986,7 @@ H2W_DEF('ac', D => {
   if (!total) return `<article class="dw wg l h2w h2-alc ok" id="h2-ac" aria-label="Alerts"><header class="wg-h"><span class="h2-alc-ic">${h2Ph('ok', 18)}</span><h3 class="wg-t">No alerts right now</h3></header></article>`;
   const chips = L.map(([n, one, many]) => `<span class="h2-alc-c"><b class="num">${n}</b>${n === 1 ? one : many}</span>`).join('');
   return `<article class="dw wg l h2w h2-alc" id="h2-ac" aria-label="Alerts" role="region"><header class="wg-h"><span class="h2-alc-ic" aria-hidden="true">${I('warn', 20)}</span><h3 class="wg-t">${total} ${total === 1 ? 'alert needs' : 'alerts need'} attention</h3></header>
-    <div class="h2-alc-cs">${chips}</div><button class="iconbtn sm h2-ib h2-alc-v" data-act="go" data-r='{"v":"work"}' aria-label="Open Actions">${h2Ph('open')}<span class="h2-tt" role="tooltip">Open Actions</span></button></article>`;
+    <div class="h2-alc-cs">${chips}</div><button class="iconbtn sm h2-ib h2-alc-v" data-act="go" data-r='{"v":"work"}' aria-label="Open Actions">${I('arrR', 18)}<span class="h2-tt" role="tooltip">Open Actions</span></button></article>`;
 });
 
 /* Total revenue (S) — donut only; the centre shows just the amount */
