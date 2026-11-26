@@ -38,11 +38,89 @@ def must_replace(s, old, new, count=1, what=''):
     if n != count: raise SystemExit(f'patch "{what or old[:60]}": expected {count} match(es), found {n}')
     return s.replace(old, new)
 
+# sidebar brand: no workspace-switcher caret (there is one business)
+b_shell = must_replace(b_shell, '<svg class="sb-sw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>', '', what='brand caret')
+
 # ---------- A: text-level patches before chunking ----------
 a_js = re.sub(r'\bczDrag\b', 'czDragA', a_js)
 TAIL = "trialDocApi.resume();\nentApi.restore();\nif (!PEOPLE[S.user]) S.user = 'meera';\nrender();"
 assert a_js.count(TAIL) == 1, 'A boot tail'
 a_js = a_js.replace(TAIL, '')   # A's boot tail moves to the very end, after file 2's code          # A's home-customise drag state; B has a czDrag() function
+# Plans page (the designer's embedded page, PK_SRC): its action bar's "Discard" reads "Cancel"
+import base64
+_m = re.search(r'(PK_SRC\s*=\s*")([A-Za-z0-9+/=]+)"', a_js); assert _m, 'PK_SRC'
+_pk = base64.b64decode(_m.group(2)).decode('utf-8')
+_pk = must_replace(_pk, """data-act="discard" ${dirty?\'\':\'disabled\'}>Discard</button>""", """data-act="discard" ${dirty?\'\':\'disabled\'}>Cancel</button>""", what='plans Discard→Cancel')
+# Plans page: Helo Clarity comes first in the plan editor's rail (and is the section a plan opens on), then Helo Messaging
+_i = _pk.index('const rail = `<div class="rail">\n') + len('const rail = `<div class="rail">\n')
+_c = _pk.index('    <div class="card rail-c ${onC?', _i); _e = _pk.index('  </div>`;', _c)
+assert _pk[_i:_c].startswith('    <div class="card rail-c ${onM?'), 'plans rail order'
+_pk = _pk[:_i] + _pk[_c:_e] + _pk[_i:_c] + _pk[_e:]
+_pk = must_replace(_pk, "orig:clone(base), product:'messaging', cview:'sub'", "orig:clone(base), product:'clarity', cview:'sub'", what='plans opens on Clarity')
+# Plans page: country tabs work like Accounts › Helo Messaging (configure plan). Each channel has its own countries;
+# "Add country" opens an inline searchable list of the rate cards that channel has in the Accounts catalogue
+# (International and regions first, then countries with their flag), and × on a tab removes it after a confirm.
+MSG_CTY = {"sms": [["INTL", "International"], ["IN", "India"]], "rcs": [["IN", "India"]], "whatsapp": [["INTL", "International"], ["R-NA", "North America"], ["R-AF", "Africa"], ["R-AP", "Asia Pacific"], ["R-CEE", "Central & Eastern Europe"], ["R-LA", "Latin America"], ["R-ME", "Middle East"], ["R-WE", "Western Europe"], ["R-OT", "Other"], ["AR", "Argentina"], ["BR", "Brazil"], ["CL", "Chile"], ["CO", "Colombia"], ["EG", "Egypt"], ["FR", "France"], ["DE", "Germany"], ["IN", "India"], ["ID", "Indonesia"], ["IL", "Israel"], ["IT", "Italy"], ["MY", "Malaysia"], ["MX", "Mexico"], ["NL", "Netherlands"], ["NG", "Nigeria"], ["PK", "Pakistan"], ["PE", "Peru"], ["RU", "Russia"], ["SA", "Saudi Arabia"], ["ZA", "South Africa"], ["ES", "Spain"], ["TR", "Türkiye"], ["AE", "United Arab Emirates"], ["GB", "United Kingdom"]]}   # from the Accounts file: MSG_REGIONS + ISO_CTY, kept to rate cards with active SKUs, per channel
+_pk = must_replace(_pk, "function viewMessaging(){\n", "function viewMessaging(){\n  { const cs=chCountries(P.draft,P.channel); if(!cs.includes(P.country)) P.country=cs[0]; }\n", what='plans channel countries')
+_pk = must_replace(_pk, '''  const tabs = d.countries.map(k=>`<button class="utab" role="tab" aria-selected="${k===ct}" data-act="country" data-c="${esc(k)}">${esc(k)} <span class="n">${selCount(d,ch,k)}</span></button>`).join('')
+    + `<button class="utab" data-act="addcountry" style="color:var(--primary)">${ic('plus',14)}Add country</button>`;''',
+'''  const cs = chCountries(d,ch);
+  const tabs = cs.map(k=>`<span class="pc-ctab"><button class="utab" role="tab" aria-selected="${k===ct}" data-act="country" data-c="${esc(k)}">${esc(k)} <span class="n">${selCount(d,ch,k)}</span></button>${cs.length>1?`<button class="pc-chip-x" data-act="rmcountry" data-c="${esc(k)}" aria-label="Remove ${esc(k)}">${ic('x',12)}</button>`:''}</span>`).join('')
+    + ctyAddTab(ch, chName);''', what='plans country tabs')
+_pk = must_replace(_pk, 'function viewMessaging(){', """I.globe = '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>';
+const MSG_CTY = """ + json.dumps(MSG_CTY, ensure_ascii=False) + """;
+const chCountries = (d,ch) => d.countries.filter(k=>d.msg[ch][k]);
+const ctyCode = n => { for(const ch in MSG_CTY){ const x=MSG_CTY[ch].find(([,m])=>m===n); if(x) return x[0]; } return ''; };
+const flagOf = n => { const c=ctyCode(n); return /^[A-Z]{2}$/.test(c) ? String.fromCodePoint(...[...c].map(x=>0x1F1E6+x.charCodeAt(0)-65)) : c ? ic('globe',14) : ''; };
+function ctyAddTab(ch, chName){
+  if(!P.ccAdd) return `<button class="utab pc-addtab" data-act="addcountry" aria-haspopup="listbox" aria-expanded="false">${ic('plus',14)}Add country</button>`;
+  const free = (MSG_CTY[ch]||[]).filter(([,n])=>!P.draft.msg[ch][n]), k = CAT[ch].length;
+  return `<span class="pc-addwrap"><button class="utab pc-addtab on" data-act="ccaddx" aria-expanded="true" aria-haspopup="listbox">${ic('plus',14)}Add country</button>
+    <span class="pc-ddmenu" role="listbox" aria-label="Choose a country"><input class="inp sm" type="search" id="ccq" placeholder="Search countries" aria-label="Search countries" style="flex:none;min-height:34px;margin-bottom:4px;position:sticky;top:0;z-index:1;box-shadow:0 -8px 0 4px var(--surface)">${free.map(([,c])=>`<button role="option" class="pc-ddopt" data-act="ccpick" data-c="${esc(c)}" data-q="${esc(c.toLowerCase())}"><span class="b3">${flagOf(c)} ${esc(c)}</span><span class="pc-ddn" aria-label="${k} SKUs">${k}</span></button>`).join('')}<span class="b4 pc-ddnone" hidden>No country matches.</span>${free.length?'':`<span class="b4" style="padding:8px 10px">No other countries in the ${esc(chName)} catalogue.</span>`}</span></span>`;
+}
+function viewMessaging(){""", what='plans ctyAddTab')
+_pk = must_replace(_pk, "case 'addcountry': openModal({type:'country'}); break;",
+  "case 'addcountry': P.ccAdd=true; render(); setTimeout(()=>{const q=document.getElementById('ccq'); q&&q.focus();},30); break;\n"
+  "    case 'ccaddx': P.ccAdd=false; render(); break;\n"
+  "    case 'ccpick': { const c=t.dataset.c, d=P.draft; if(!d.countries.includes(c)) d.countries.push(c); d.msg[P.channel][c]=d.msg[P.channel][c]||[]; P.country=c; P.sq=''; P.ccAdd=false; render(); toast(`${c} added`); break; }\n"
+  "    case 'rmcountry': openModal({type:'rmcty', c:t.dataset.c}); break;", what='plans country actions')
+_pk = must_replace(_pk, "  } else if(M.type==='leave'){", '''  } else if(M.type==='rmcty'){
+    const c=M.c, chName=CHANNELS.find(x=>x.id===P.channel).name, k=selCount(P.draft,P.channel,c);
+    o.innerHTML = `<div class="scrim" data-act="scrim"><div class="dlg" role="alertdialog" aria-modal="true" aria-labelledby="mt">
+      <div class="dlg-h"><h2 class="h6" id="mt" style="font-size:18px">Remove ${esc(c)}?</h2><div class="b3 muted">The country and all its ${esc(chName)} SKUs will be taken off this plan.</div></div>
+      <div class="dlg-b">${k?`<div class="sum"><span class="b2">${flagOf(c)} ${esc(c)}</span><span class="b3 muted num">${esc(chName)} · ${k} SKU${k===1?'':'s'}</span></div>`:''}
+        <div class="b3 muted">You can add it back from Add country. Nothing changes until you save the plan.</div></div>
+      <div class="dlg-f"><button class="btn btn-sec" data-act="mclose">Cancel</button><button class="btn btn-dan" data-act="mconfirm">${ic('trash',14)}Remove</button></div></div></div>`;
+    setTimeout(()=>{const b=o.querySelector('[data-act=mclose]'); b&&b.focus();},0);
+  } else if(M.type==='leave'){''', what='plans remove-country dialog')
+_pk = must_replace(_pk, "  if(M.type==='country'){", '''  if(M.type==='rmcty'){ const c=M.c, d=P.draft, ch=P.channel, chName=CHANNELS.find(x=>x.id===ch).name, n=selCount(d,ch,c);
+    delete d.msg[ch][c]; if(!CHANNELS.some(x=>d.msg[x.id][c])) d.countries=d.countries.filter(x=>x!==c); if(P.country===c) P.country=chCountries(d,ch)[0];
+    closeModal(); render(); toast(n?`Removed ${c} and its ${n} SKU${n===1?'':'s'} from ${chName}`:`${c} removed from ${chName}`); return; }
+  if(M.type==='country'){''', what='plans remove-country confirm')
+_pk = must_replace(_pk, "\n</script>", '''
+// the country list: search, and close on Escape or a click outside it
+document.addEventListener('input',ev=>{ const t=ev.target; if(t.id!=='ccq') return; const q=t.value.trim().toLowerCase(), box=t.closest('.pc-ddmenu'); let n=0;
+  box.querySelectorAll('.pc-ddopt').forEach(b=>{ const hit=!q||b.dataset.q.includes(q); b.hidden=!hit; if(hit) n++; }); box.querySelector('.pc-ddnone').hidden=n>0; });
+document.addEventListener('mousedown',ev=>{ if(P && P.ccAdd && !ev.target.closest('.pc-addwrap')){ P.ccAdd=false; render(); } });
+document.addEventListener('keydown',ev=>{ if(ev.key==='Escape' && P && P.ccAdd && !M){ P.ccAdd=false; render(); } });
+</script>''', what='plans country list events')
+_pk = must_replace(_pk, "\n</style>", '''
+/* country tabs and the Add country list (same as Accounts › configure plan) */
+.ctabs{overflow:visible;flex-wrap:wrap}
+.pc-ctab{display:inline-flex;align-items:center}
+.pc-chip-x{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;color:var(--text-muted)}
+.pc-chip-x:hover{background:var(--border-subtle);color:var(--text-primary)}
+.pc-ctab .pc-chip-x{margin-left:-4px}
+.pc-addtab{display:inline-flex;align-items:center;gap:6px;color:var(--primary);font-weight:600}
+.pc-addtab:hover,.pc-addtab.on{background:var(--accent-subtle);color:var(--primary)}
+.pc-addwrap{position:relative;display:inline-flex}
+.pc-ddmenu{position:absolute;top:calc(100% + 4px);left:0;z-index:30;min-width:240px;max-height:280px;overflow:auto;background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);box-shadow:0 8px 24px rgba(0,0,0,.12);padding:4px;display:flex;flex-direction:column}
+.pc-ddopt{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 10px;border:0;border-radius:var(--radius-md);background:transparent;text-align:left;cursor:pointer}
+.pc-ddopt[hidden]{display:none}.pc-ddopt .b3{display:inline-flex;align-items:center;gap:6px}
+.pc-ddn{font-size:12px;line-height:16px;font-weight:600;color:var(--text-secondary);background:var(--surface-muted);border-radius:var(--radius-full);padding:1px 8px;min-width:24px;text-align:center}
+.pc-ddopt:hover,.pc-ddopt:focus-visible{background:var(--accent-subtle);outline:none}
+</style>''', what='plans country css')
+a_js = a_js[:_m.start(2)] + base64.b64encode(_pk.encode('utf-8')).decode() + a_js[_m.end(2):]
 A = chunks_of(a_js); B = chunks_of(b_js)
 Akey = {}; [Akey.setdefault(c['key'], c) for c in A]
 Bkey = {}; [Bkey.setdefault(c['key'], c) for c in B]
