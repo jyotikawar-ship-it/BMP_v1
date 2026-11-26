@@ -4734,7 +4734,8 @@ html[data-src="a"] .ctl-top-h{font:600 24px/32px Inter,system-ui,sans-serif;lett
 :where(html[data-src="b"]) .a6-card{background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);box-shadow:0 1px 2px rgba(16,24,40,.05)}
 :where(html[data-src="b"]) .a6-bh{display:flex;align-items:center;gap:12px;padding:16px 20px}
 :where(html[data-src="b"]) .a6-bi{width:40px;height:40px;border-radius:var(--radius-md);background:var(--accent-subtle);color:var(--primary);display:grid;place-items:center;flex:none}
-:where(html[data-src="b"]) .a6-bt{display:flex;flex-direction:column;gap:2px;min-width:0}
+:where(html[data-src="b"]) .a6-bt{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+:where(html[data-src="b"]) .a6-fill{flex:none;gap:6px}
 :where(html[data-src="b"]) .a6-bt b{font-size:15px;font-weight:600}
 :where(html[data-src="b"]) .a6-bt span{font-size:13px;color:var(--text-secondary)}
 :where(html[data-src="b"]) .a6-chip{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);font-size:11.5px;font-weight:600;letter-spacing:.4px;color:var(--text-secondary);white-space:nowrap}
@@ -20195,8 +20196,8 @@ const a6CL = f => Object.assign(a6C(f, '', ''), {lims:Object.assign({}, A6_LIM_D
 const a6G = (match, conds, levels) => ({match, conds, levels:levels.map(who => ({who}))});
 function a6Base(groups, other, by, d){ return {on:true, groups, other:other || {mode:'approve', levels:[{who:['role:mgr']}]}, timing:{remind:'2', remindH:'0', escOn:true, esc:'5', escTo:['role:md']}, back:'start', reason:true, from:'now', fromDate:'', hist:by ? [{by, on:d, what:'Published'}] : []}; }
 const a6Rules = () => S.apprRules6 || (S.apprRules6 = {
-  'deal-create':  a6Base([a6G('any', [a6C('discount', 'gt', 30), a6C('value', 'gt', 4000000)], [['role:md']]),   // deals are approved by the MD
-                          a6G('any', [a6CL('discLim'), a6CL('valLim')], [['role:md']])], {mode:'approve', levels:[{who:['role:md']}]}, 'Meera Iyer', -9),
+  'deal-revise':  a6Base([a6G('any', [a6C('discount', 'gt', 25), a6C('belowBase', 'any', '', ['Yes'])], [['role:md']]),   // Create deal or plan is left unconfigured, to set up live
+                          a6G('any', [a6CL('discLim')], [['role:md']])], {mode:'approve', levels:[{who:['role:md']}]}, 'Meera Iyer', -9),
   'sku-create':   a6Base([a6G('all', [a6C('country', 'none', '', ['India'])], [['kavya', 'arun']]), a6G('all', [a6C('product', 'any', '', ['Helo Clarity'])], [['role:md']])], null, 'Meera Iyer', -21),
   'pay-recon':    a6Base([a6G('all', [a6C('onlyFin', 'any', '', ['Yes'])], [['role:md']])], null, 'Meera Iyer', -14),
   'acct-archive': a6Base([a6G('all', [a6C('owed', 'gt', 0)], [['role:fin'], ['role:md']])], null, 'Meera Iyer', -12),
@@ -20404,7 +20405,7 @@ function a6Builder(st){
   const T = c.timing, num = (key, v, err, label) => `<span class="am-num a5-num sm${err ? ' bad' : ''}"><input class="inp" inputmode="numeric" data-inp="a6-t" data-key="${key}" value="${esc(v)}" aria-label="${esc(label)}"><em>days</em></span>`;
   const numR = (key, v, unit) => `<span class="am-num a5-num sm${B('remind') ? ' bad' : ''}"><input class="inp" inputmode="numeric" data-inp="a6-t" data-key="${key}" value="${esc(v == null ? '' : v)}" aria-label="Remind after, ${unit}"><em>${unit}</em></span>`;
   const settings = `<section class="a6-rem"><span class="a6-remt">Reminder</span><div class="a5-in"><span>Remind the approver after</span>${numR('remind', T.remind, 'days')}${numR('remindH', T.remindH == null ? '0' : T.remindH, 'hours')}</div>${a5ErrHtml(B('remind'))}</section>`;
-  const head = `<div class="a6-bh"><span class="a6-bi">${I('sliders',20)}</span><div class="a6-bt"><b>Rule builder</b><span>Groups are checked from top to bottom. The first one that matches decides who approves.</span></div></div>`;
+  const head = `<div class="a6-bh"><span class="a6-bi">${I('sliders',20)}</span><div class="a6-bt"><b>Rule builder</b><span>Groups are checked from top to bottom. The first one that matches decides who approves.</span></div>${st.k ? `<button class="btn btn-sec sm a6-fill" data-act="a6-fill" title="Demo only: fills in sample groups and approvers">${I('sparkles',16)}Auto-fill sample rule</button>` : ''}</div>`;
   c.on = true; const onRow = '';   // a published rule always applies: there is no on/off switch (delete the rule to stop it)
   return `<div class="a6-wrap">
     ${notes.map(n => `<div class="am-note">${I('info',14)}<span>${esc(n)}</span></div>`).join('')}
@@ -20451,6 +20452,16 @@ function a6Leave(then){ if (!a6Dirty()) return then(); S._a6Then = then;
 const a6Gp = t => S._a6.cfg.groups[+t.dataset.g];
 const a6Cd = t => a6Gp(t).conds[+t.dataset.c];
 const a6Lv = t => t.dataset.k === 'o' ? S._a6.cfg.other.levels : S._a6.cfg.groups[+t.dataset.k.slice(1)].levels;
+/* demo helper: a believable sample rule for any action (two groups, then Otherwise) */
+function a6Sample(k){
+  if (k === 'deal-create') return {groups:[a6G('any', [a6C('discount', 'gt', 30), a6C('value', 'gt', 4000000)], [['role:mgr'], ['role:md']]), a6G('any', [a6CL('discLim'), a6CL('valLim')], [['role:mgr']])], other:{mode:'approve', levels:[{who:['role:mgr']}]}};
+  const NUM = {discount:20, value:4000000, credit:45, rateChange:10, rows:100, amount:500000, rev:5000000, owed:100000, odays:15, len:30, ext:14, total:45};
+  const cond = f => { const F = A5F[f]; if (!F || F.type === 'user' || F.type === 'every') return null; if (F.type === 'rolelim') return a6CL(f); if (F.type === 'num') return a6C(f, 'gt', NUM[f] || 10);
+    const L = A5_LISTS[F.list] || []; return a6C(f, 'any', '', [F.list === 'yesno' ? 'Yes' : F.list === 'role' ? 'Sales Rep' : L[0]].filter(Boolean)); };
+  const C = (A5_FIELDS[k] || []).map(cond).filter(Boolean), lim = C.filter(c => c.lims), rest = C.filter(c => !c.lims);
+  const g1 = rest.slice(0, 2), g2 = lim.length ? lim.slice(0, 1) : rest.slice(2, 3);
+  return {groups:[g1.length ? a6G('any', g1, [['role:mgr'], ['role:md']]) : null, g2.length ? a6G('all', g2, [['role:mgr']]) : null].filter(Boolean), other:{mode:'approve', levels:[{who:['role:mgr']}]}};
+}
 function a6NewCond(ak, f){ const k = f || (A5_FIELDS[ak] || [])[0], F = A5F[k]; return F && F.type === 'rolelim' ? a6CL(k) : a6C(k, F && F.type === 'num' ? 'gt' : 'any', ''); }
 function a6SetAct(k){ const had = a6Has(k); a6Open(k); if (had) S._a6.note = `${a5Act(k).name} already has ${a6Rules()[k] ? 'a rule' : 'a draft'}, so you’re editing it.`; else { S._a6.baseK = ''; S._a6.cfg.groups = [a6G('all', [a6NewCond(k)], [[]])]; S._a6.open = {g0c0:true}; S._a6.act = 0; } a6Re('#a6-act'); }
 CHG['a6-act'] = t => { const k = t.value, st = S._a6;
@@ -20494,6 +20505,8 @@ Object.assign(ACT, {
   'a6-leave-ok': () => { closeOverlay(); const f = S._a6Then; S._a6Then = null; if (f) f(); else render(); },
   'a6-peek': t => { const k = t.dataset.k, P = S._a6Peek || (S._a6Peek = {}); P[k] = !P[k]; t.setAttribute('aria-expanded', String(P[k])); t.closest('li').classList.toggle('pk', P[k]); },
   'a6-toggle': () => { const c = S._a6.cfg; if (c.on){ openDialog('Switch off approval?', `<p class="b3" style="margin:0">Once you publish, every ${esc(a5Act(S._a6.k).name)} request goes ahead without approval. Your groups are kept.</p>`, `<button class="btn btn-sec" data-act="close">Cancel</button><button class="btn btn-dan" data-act="a6-off-ok">Switch off</button>`); return; } c.on = true; a6Re('[data-act="a6-toggle"]'); },
+  'a6-fill': () => { const st = S._a6; if (!st || !st.k) return; const X = a6Sample(st.k); st.cfg.groups = X.groups; st.cfg.other = X.other; st.cfg.on = true;
+    st.open = {}; st.showErr = false; st.act = 0; a6Re('[data-act="a6-fill"]'); toast('Sample groups filled in. Change anything before you publish.', 'ok'); },
   'a6-off-ok': () => { S._a6.cfg.on = false; closeOverlay(); a6Re('[data-act="a6-toggle"]'); },
   'a6-set': () => { S._a6.setOpen = !S._a6.setOpen; a6Re('[data-act="a6-set"]'); },
   'a6-esc': () => { const T = S._a6.cfg.timing; T.escOn = !T.escOn; a6Re('[data-act="a6-esc"]'); },
