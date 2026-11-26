@@ -4736,8 +4736,7 @@ html[data-src="a"] .ctl-top-h{font:600 24px/32px Inter,system-ui,sans-serif;lett
 :where(html[data-src="b"]) .a6-bi{width:40px;height:40px;border-radius:var(--radius-md);background:var(--accent-subtle);color:var(--primary);display:grid;place-items:center;flex:none}
 :where(html[data-src="b"]) .a6-bt{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
 :where(html[data-src="b"]) .a6-fill{flex:none;gap:6px}
-html[data-src="b"] .a6-gh .a6-gok{width:32px;height:32px;color:#fff;border:1px solid #3186DF;background:#3186DF;border-radius:8px}
-html[data-src="b"] .a6-gh .a6-gok:hover{background:#2474C7;border-color:#2474C7}
+html[data-src="b"] .a6-gh .a6-gok{padding:0 8px;min-width:0;gap:0}
 :where(html[data-src="b"]) .a6-bt b{font-size:15px;font-weight:600}
 :where(html[data-src="b"]) .a6-bt span{font-size:13px;color:var(--text-secondary)}
 :where(html[data-src="b"]) .a6-chip{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);font-size:11.5px;font-weight:600;letter-spacing:.4px;color:var(--text-secondary);white-space:nowrap}
@@ -20430,7 +20429,7 @@ function a6Builder(st){
     return `${gi ? `<div class="a6-sep" aria-hidden="true"><span>If not, check the next group</span></div>` : ''}
       <section class="a6-grp${B(`g${gi}`) ? ' bad' : ''}" style="--gc:${col}" data-a6g="${gi}" aria-label="Group ${gi + 1}">
         <div class="a6-gh"><span class="a6-gchip">Group ${gi + 1}</span>${a5ErrHtml(B(`g${gi}`))}<span class="spacer"></span>
-          <button class="iconbtn sm a6-gok" data-act="a6-gdone" data-g="${gi}" aria-label="Done with group ${gi + 1}" title="Done">${I('tick',16)}</button>
+          <button class="btn btn-sec sm a6-gok" data-act="a6-gdone" data-g="${gi}" aria-label="Done with group ${gi + 1}" title="Done">${I('tick',16)}</button>
           <button class="iconbtn sm" data-act="a6-gmove" data-g="${gi}" data-d="-1" aria-label="Move group up" ${gi ? '' : 'disabled'}>${I('up',15)}</button><button class="iconbtn sm" data-act="a6-gmove" data-g="${gi}" data-d="1" aria-label="Move group down" ${gi < n - 1 ? '' : 'disabled'}>${I('down',15)}</button>
           <button class="iconbtn sm" data-act="a6-gdup" data-g="${gi}" aria-label="Duplicate group" ${n < A6_MAX_GROUPS ? '' : 'disabled'}>${h2Ph('dup',15)}</button><button class="iconbtn sm" data-act="a6-gdel" data-g="${gi}" aria-label="Delete group">${h2Ph('trash',15)}</button>
           <span class="a6-drag" draggable="true" data-g="${gi}" title="Drag to reorder" aria-hidden="true">${h2Ph('grip', 16)}</span></div>
@@ -20544,7 +20543,7 @@ document.addEventListener('dragover', e => { if (S._a6drag == null) return; cons
   $$('.a6-grp.drop-b, .a6-grp.drop-a').forEach(x => x.classList.remove('drop-b', 'drop-a')); const r = g.zRect(); g.classList.add(e.clientY / UI_ZOOM < r.top + r.height / 2 ? 'drop-b' : 'drop-a'); });
 document.addEventListener('drop', e => { if (S._a6drag == null) return; const g = e.target.closest && e.target.closest('.a6-grp[data-a6g]'); if (!g) return; e.preventDefault();
   const from = S._a6drag, G = S._a6.cfg.groups, r = g.zRect(); let to = +g.dataset.a6g + (e.clientY / UI_ZOOM < r.top + r.height / 2 ? 0 : 1); if (to > from) to--;
-  S._a6drag = null; if (to !== from){ const [x] = G.splice(from, 1); G.splice(to, 0, x); a6ReOpen(); render(); toast(`Group moved to position ${to + 1}.`, 'info'); } else render(); });
+  S._a6drag = null; if (to !== from){ const ids = G.map((_, i) => i), [x] = G.splice(from, 1); G.splice(to, 0, x); const [y] = ids.splice(from, 1); ids.splice(to, 0, y); if (S._a6.act >= 0) S._a6.act = ids.indexOf(S._a6.act); a6ReOpen(); render(); toast(`Group moved to position ${to + 1}.`, 'info'); } else render(); });
 document.addEventListener('dragend', () => { if (S._a6drag == null) return; S._a6drag = null; $$('.a6-grp').forEach(x => x.classList.remove('dragging', 'drop-b', 'drop-a')); });
 const a6ReOpen = () => { S._a6.open = {}; };
 Object.assign(ACT, {
