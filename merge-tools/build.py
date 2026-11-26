@@ -44,6 +44,8 @@ b_shell = must_replace(b_shell, '<svg class="sb-sw" width="16" height="16" viewB
 # ---------- A: text-level patches before chunking ----------
 # Catalogs: the tour button reads "How it works"
 a_js = must_replace(a_js, "Watch the tour</button>", "How it works</button>", what='tour button label')
+# Catalogs: the side list's heading has no count
+a_js = must_replace(a_js, '<h2 class="ctl-nh-t">Catalogs <span class="ctl-n num">${L.length}</span></h2>', '<h2 class="ctl-nh-t">Catalogs</h2>', what='catalog list heading count')
 a_js = re.sub(r'\bczDrag\b', 'czDragA', a_js)
 TAIL = "trialDocApi.resume();\nentApi.restore();\nif (!PEOPLE[S.user]) S.user = 'meera';\nrender();"
 assert a_js.count(TAIL) == 1, 'A boot tail'
@@ -526,6 +528,7 @@ css += '/* merged: All / Archived tabs in the Catalogs side list */\n.ctl-nav .c
 css += '/* merged: 12px between the upload drop zone and "Remove duplicate records" */\n.bk-up + .bk-chk{margin-top:12px;display:flex;width:fit-content}\n'
 css += '/* merged: 16px between an uploaded file and its errors; 8px from the error line to the rows to fix */\n.bk-fwrap{gap:16px}\n.bk-files + .tblwrap{margin-top:8px}\n'
 css += '/* merged: 16px between the browse section and Uploaded files */\n.bk-chk + .bk-files{margin-top:16px}\n'
+css += open(os.path.join(HERE, 'sidebar_rail.css'), encoding='utf-8').read()   # the folded sidebar
 css = css.replace('--zvh:calc(1vh / .9);--zvw:calc(1vw / .9)', '--zvh:1vh;--zvw:1vw')
 head_a = A_HTML[:A_HTML.index('<style>')]
 tail_a = A_HTML[A_HTML.rindex('</script>') + len('</script>'):]

@@ -5395,6 +5395,20 @@ td:has(> .sk2-mw > .sk2-catm){z-index:31}
 .bk-files + .tblwrap{margin-top:8px}
 /* merged: 16px between the browse section and Uploaded files */
 .bk-chk + .bk-files{margin-top:16px}
+/* merged: the sidebar toggle folds the sidebar to an icon rail; Helo Business stays at the top and the profile at the bottom */
+@media (min-width:901px){
+  body[data-side="off"] .shell{grid-template-columns:64px minmax(0,1fr)}
+  body[data-side="off"] .side{display:flex;width:64px}
+  body[data-side="off"] .side-brand{justify-content:center;padding:0}
+  body[data-side="off"] .side-brand .brandtx,body[data-side="off"] .navitem > span:not(.cnt),body[data-side="off"] .usercard .uinfo,body[data-side="off"] #uchev{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  body[data-side="off"] .side-nav{padding:8px 12px;align-items:center}
+  body[data-side="off"] .navgroup{width:100%;height:1px;padding:0;margin:8px 0;background:var(--border-subtle);font-size:0;overflow:hidden}
+  body[data-side="off"] .navitem{position:relative;width:40px;height:40px;min-height:40px;padding:0;justify-content:center}
+  body[data-side="off"] .navitem .cnt{position:absolute;top:1px;right:-2px;margin:0;padding:0 4px;min-width:16px;font-size:9px;line-height:14px}
+  body[data-side="off"] .side-foot{padding:12px 8px;align-items:center}
+  body[data-side="off"] .usercard{width:auto;padding:0;border:0;border-radius:var(--radius-full);background:none}
+  body[data-side="off"] .usermenu{right:auto;width:260px}
+}
 
 
 /* ===== one style for segmented controls, tab counts and underline tabs, across the product ===== */
@@ -6738,6 +6752,17 @@ function fitRowMenus(){
     if (r.bottom > c.bottom - 4 && !m.classList.contains('up')) m.classList.add('up');
     else if (r.top < c.top + 4 && m.classList.contains('up')) m.classList.remove('up'); });
 }
+/* the folded sidebar names each icon on hover */
+function navTips(){
+  const off = document.body.dataset.side === 'off';
+  const tip = (el, l) => { if (!el) return; if (off) el.title = l; else el.removeAttribute('title'); };
+  document.querySelectorAll('#sidenav .navitem').forEach(b => tip(b, b.querySelector('span:not(.cnt)').textContent));
+  tip(document.querySelector('.side-brand'), 'Helo Business');
+  tip($('#usercard'), $('#uname').textContent);
+}
+const renderNavA = renderNav;
+renderNav = function(){ renderNavA(); navTips(); };
+new MutationObserver(navTips).observe(document.body, {attributes:true, attributeFilter:['data-side']});
 
 const subTabs = (L, cur, act) => `<div class="seg-wrap"><div class="acl-tabs" role="tablist">${L.map(([k, l, n]) => `<button class="acl-vtab ${cur === k ? 'on' : ''}" role="tab" aria-selected="${cur === k}" data-act="${act}" data-k="${esc(k)}">${esc(l)}${n != null ? ` <b class="num">${n}</b>` : ''}</button>`).join('')}</div></div>`;
 const tabsHtml = (tabs, cur, act = 'tab') => `<div class="tabstrip" role="tablist">${tabs.filter(Boolean).map(([k, l, n]) => `<button class="utab" role="tab" aria-selected="${cur === k}" data-act="${act}" data-tab="${k}">${l}${n != null && n !== '' ? `<span class="n num">${n}</span>` : ''}</button>`).join('')}</div>`;
@@ -14505,7 +14530,7 @@ function cmNav(active){
   const all = cmShown(), L = all.filter(c => !c.archived), AR = all.filter(c => c.archived), tab = S._cmTab === 'archived' ? 'archived' : 'all', LT = tab === 'archived' ? AR : L, item = c => { const n = cmSkus(c).length, on = active === 'cat:' + c.name;
     return `<a href="#" class="ctl-item${on ? ' on' : ''}" data-act="cm-go" data-k="${esc(c.name)}" data-n="${esc((c.code + ' ' + c.name).toLowerCase())}" ${on ? 'aria-current="page"' : ''}><span class="ctl-it"><span class="ctl-name">${esc(c.name)}</span><span class="ctl-code">${esc(c.code)}</span></span><span class="ctl-tagc">${c.def ? '<span class="sk2-def ctl-deft">Default</span>' : ''}</span><span class="ctl-n num">${n}</span></a>`; };
   return `<nav class="ctl-nav" aria-label="Catalogues">
-    <div class="ctl-nh"><h2 class="ctl-nh-t">Catalogues <span class="ctl-n num">${L.length}</span></h2>${can.sku() ? `<button class="btn btn-sec sm" data-act="bk-open">${I('plus',14)}New catalogue</button>` : ''}</div>
+    <div class="ctl-nh"><h2 class="ctl-nh-t">Catalogues</h2>${can.sku() ? `<button class="btn btn-sec sm" data-act="bk-open">${I('plus',14)}New catalogue</button>` : ''}</div>
     <nav class="sk2-tabs ctl-ntabs" role="tablist" aria-label="Catalogue status">${[['all', 'All', L.length], ['archived', 'Archived', AR.length]].map(([k, l, n]) => `<button class="sk2-tab ${tab === k ? 'on' : ''}" role="tab" aria-selected="${tab === k}" data-act="cm-ntab" data-k="${k}">${l}<span class="sk2-bc num">${n}</span></button>`).join('')}</nav>
     ${LT.length > 6 ? `<label class="search sm ctl-ns">${I('search',14)}<input type="search" id="cm-nq" placeholder="Search catalogues" aria-label="Search catalogues" autocomplete="off"></label>` : ''}
     <div class="ctl-list">${LT.map(item).join('')}</div>${LT.length ? '' : `<div class="b4 ctl-none">${tab === 'archived' ? 'No archived catalogues.' : 'No active catalogues.'}</div>`}<div class="b4 ctl-none" hidden>No catalogues match.</div>
