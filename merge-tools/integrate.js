@@ -177,7 +177,17 @@ function apExtraWork(items){
   shade.style.cssText = 'position:fixed;inset:0;z-index:1000;background:var(--scrim)';
   document.body.appendChild(shade);
   let open = null;   // {frame, scrim} while an embedded overlay is open
+  /* modals inside a frame are centred in the frame; --frame-dx / --frame-dy (half the frame's offset from the page's
+     top-left, in the frame's own pixels) move them back to the centre of the whole page */
+  const centre = f => { const w = f.contentWindow, de = w && w.document && w.document.documentElement; if (!de || !w.innerWidth) return;
+    const r = f.getBoundingClientRect(), sc = r.width / w.innerWidth || 1;
+    /* an open dialog moves only as far as it can while staying whole inside the frame (narrow windows) */
+    const dlg = w.document.querySelector('#overlay .dialog, #overlay .scrim > *'), room = (inner, size) => dlg ? Math.max(0, (inner - size) / 2 - 8) : Infinity;
+    const dx = Math.round(Math.min(r.left / 2 / sc, room(w.innerWidth, dlg ? dlg.offsetWidth : 0))) + 'px', dy = Math.round(Math.min(r.top / 2 / sc, room(w.innerHeight, dlg ? dlg.offsetHeight : 0))) + 'px';
+    if (de.style.getPropertyValue('--frame-dx') !== dx) de.style.setProperty('--frame-dx', dx);
+    if (de.style.getPropertyValue('--frame-dy') !== dy) de.style.setProperty('--frame-dy', dy); };
   const sync = () => {
+    document.querySelectorAll('#acframe, iframe.pkf').forEach(f => { try { centre(f); } catch (e) {} });
     open = null;
     for (const f of document.querySelectorAll('#acframe, iframe.pkf')){
       if (f.hidden || !f.offsetParent) continue;

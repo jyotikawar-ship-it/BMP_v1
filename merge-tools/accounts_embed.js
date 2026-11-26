@@ -6,7 +6,7 @@
    ===================================================================== */
 const AC_VIEWS = ['accounts', 'work'];
 const AC_PEOPLE = ['meera', 'arun', 'dev'];   // the personas the embedded file has
-const AC_CSS = '<style>.side,.topbar{display:none!important}.shell{display:block!important;min-height:0!important}#view{min-height:100vh!important}.toasts{top:calc(12px + env(safe-area-inset-top,0px))!important}:root{--sticky-top:0px!important}</style>';
+const AC_CSS = '<style>.side,.topbar{display:none!important}.shell{display:block!important;min-height:0!important}#view{min-height:100vh!important}.toasts{top:calc(12px + env(safe-area-inset-top,0px))!important}:root{--sticky-top:0px!important}.dialog{left:calc(50% - var(--frame-dx,0px))!important;top:calc(50% - var(--frame-dy,0px))!important;max-height:calc(100vh - 48px - 2 * var(--frame-dy,0px))!important}</style>';
 const acWin = () => { const f = document.getElementById('acframe'); return f && f.contentWindow && f.dataset.ready === '1' ? f.contentWindow : null; };
 const acRun = code => { const w = acWin(); if (!w) return undefined; try { return w.eval(code); } catch (e) { console.error(e); return undefined; } };
 function acDoc(){
