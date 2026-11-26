@@ -5374,6 +5374,13 @@ html.ac-wait #view{visibility:hidden}   /* one top bar on every page: breadcrumb
 td:has(> .sk2-mw > .sk2-catm){z-index:31}
 /* merged: All / Archived tabs in the Catalogues side list */
 .ctl-nav .ctl-ntabs{height:40px;padding:0 4px;margin:0 0 8px;background:transparent}
+/* merged: 8px between the upload drop zone and "Remove duplicate records" */
+.bk-up + .bk-chk{margin-top:8px;display:flex;width:fit-content}
+/* merged: 16px between an uploaded file and its errors; 8px from the error line to the rows to fix */
+.bk-fwrap{gap:16px}
+.bk-files + .tblwrap{margin-top:8px}
+/* merged: 16px between the browse section and Uploaded files */
+.bk-chk + .bk-files{margin-top:16px}
 
 </style>
 
@@ -14701,7 +14708,7 @@ function ftDialog(){
   const code = D.cty ? ftCode(x, D.cty) : '';
   openDialog(`Configure ${esc(x.name)}<span class="qm-sub">${esc(x.key)} · from the backend</span>`, `<div class="fgrid">
     <div class="field"><label for="ft-cty">Country</label><div class="flag-sel${D.cty ? ' on' : ''}">${D.cty ? flagSvg(D.cty) : ''}<select class="inp${bad('cty')}${D.cty ? '' : ' ph'}" id="ft-cty" data-chg="ftd" data-k="cty"><option value="">Select country</option>${ctyOpts(D.cty).replace(new RegExp(`<option value="(${used.join('|') || '__'})"[^>]*>[^<]*</option>`, 'g'), '')}</select></div>${used.length ? `<span class="hint">Already configured: ${esc(used.join(', '))}.</span>` : ''}${err('cty')}</div>
-    <div class="field"><label for="ft-cat">Catalogue <span class="opt">(Optional)</span></label>${sel('cat', [['__none__', 'No catalogue'], ...saasCats.map(c => [c.name, `${c.name} · ${c.code}`])], 'Select catalogue')}</div>
+    <div class="field"><label for="ft-cat">Catalogue <span class="opt">(Optional)</span></label>${sel('cat', [...saasCats.map(c => [c.name, `${c.name} · ${c.code}`])], 'Select catalogue')}</div>
     <div class="field full"><span class="lbl">Access type</span><div class="seg2" role="radiogroup" aria-label="Access type">${FT_ACCESS.map(([v, l]) => `<button type="button" role="radio" id="ft-acc-${v}" aria-checked="${D.access === v}" class="${D.access === v ? 'on' : ''}" data-act="ft-acc" data-v="${v}">${l}</button>`).join('')}</div>
       <span class="hint">${D.access === 'metered' ? 'Customers pay for how much they use.' : 'Customers either have the feature or they don’t. No usage is counted.'}</span></div>
     <div class="field"><label for="ft-price">${D.access === 'metered' ? 'Price per unit' : 'Price'}</label><div class="ns-pre${e.price ? ' bad' : ''}"><span aria-hidden="true">${esc(sym)}</span><input class="inp num" id="ft-price" data-inp="ftd" data-k="price" inputmode="decimal" value="${esc(D.price)}" placeholder="0.00" autocomplete="off" ${e.price ? 'aria-invalid="true" aria-describedby="e-ft-price"' : ''}></div>${err('price')}</div>
@@ -14894,7 +14901,7 @@ function nsView(){
     <div class="field full"><span class="lbl">Type of SKU</span>${seg('kind', 'ns-kind', [['msg','Message'], ['svc','Service']], 'Type of SKU')}</div>
     <fieldset class="bk-fs full ns-fs"><legend>Basics</legend><div class="fgrid">
       <div class="field full"><label for="ns-name">${msg ? 'SKU name' : 'Service name'}</label><input class="inp${bad('name')}" id="ns-name" data-inp="ns" data-k="name" maxlength="80" value="${esc(N.name)}" placeholder="${msg ? 'e.g. Transactional SMS India' : 'Onboarding and setup'}" autocomplete="off">${err('name')}</div>
-      <div class="field"><label for="ns-cat">Catalogue${N.free ? OPT : ''}</label>${N.free ? sel('cat', 'cat', [['__none__', 'No catalogue'], ...nsCats().map(k => [k.name, `${k.name} · ${k.code}`])], 'Select catalogue') : `<input class="inp" id="ns-cat" readonly value="${esc(c ? `${c.name} · ${c.code}` : N.cat)}" aria-describedby="ns-cat-h"><span class="hint" id="ns-cat-h">You’re adding this SKU to this catalogue.</span>`}${N.free && (!N.cat || N.cat === '__none__') ? `<span class="hint">${N.cat ? 'This SKU stays unassigned. You can add it to a catalogue later.' : 'Choose No catalogue to keep it unassigned.'}</span>` : ''}${err('cat')}</div>
+      <div class="field"><label for="ns-cat">Catalogue${N.free ? OPT : ''}</label>${N.free ? sel('cat', 'cat', [...nsCats().map(k => [k.name, `${k.name} · ${k.code}`])], 'Select catalogue') : `<input class="inp" id="ns-cat" readonly value="${esc(c ? `${c.name} · ${c.code}` : N.cat)}" aria-describedby="ns-cat-h"><span class="hint" id="ns-cat-h">You’re adding this SKU to this catalogue.</span>`}${N.free && (!N.cat || N.cat === '__none__') ? `<span class="hint">Leave it empty to keep this SKU unassigned. You can add it to a catalogue later.</span>` : ''}${err('cat')}</div>
       <div class="field"><label for="ns-cty">Country</label><div class="flag-sel${N.cty ? ' on' : ''}">${N.cty ? flagSvg(N.cty) : ''}<select class="inp${bad('cty')}${N.cty ? '' : ' ph'}" id="ns-cty" data-chg="ns" data-k="cty"><option value="">Select country</option>${ctyOpts(N.cty)}</select></div>${err('cty')}</div>
       ${msg ? `<div class="field"><label for="ns-chan">Channel</label>${sel('chan', 'chan', chans, 'Select channel')}${err('chan')}</div>
       <div class="field"><label for="ns-traffic">Message type</label>${sel('traffic', 'traffic', (NS_MTYPES[N.chan] || []).map(x => [x, x]), N.chan ? 'Select message type' : 'Select channel first', N.chan ? '' : 'disabled')}${err('traffic')}</div>` : `<div class="field"><label for="ns-svc">Service type</label>${sel('svc', 'svc', nsSvcs(c).map(v => [v, v]), 'Select service type')}${err('svc')}</div>`}
