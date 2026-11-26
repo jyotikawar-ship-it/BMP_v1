@@ -42,6 +42,8 @@ def must_replace(s, old, new, count=1, what=''):
 b_shell = must_replace(b_shell, '<svg class="sb-sw" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>', '', what='brand caret')
 
 # ---------- A: text-level patches before chunking ----------
+# Catalogs: the tour button reads "How it works"
+a_js = must_replace(a_js, "Watch the tour</button>", "How it works</button>", what='tour button label')
 a_js = re.sub(r'\bczDrag\b', 'czDragA', a_js)
 TAIL = "trialDocApi.resume();\nentApi.restore();\nif (!PEOPLE[S.user]) S.user = 'meera';\nrender();"
 assert a_js.count(TAIL) == 1, 'A boot tail'
@@ -521,7 +523,7 @@ css = cssmerge.merge_text(a_css, b_css)
 css += '\n/* merged: a table\'s hidden label (.sr) stays inside its scroll box, so a wide table never scrolls the whole page */\n.sk2-card > .tblscroll{position:relative}\n'
 css += '/* merged: the sticky cell holding an open row menu sits above the next rows, so the menu is never hidden */\ntd:has(> .sk2-mw > .sk2-catm){z-index:31}\n'
 css += '/* merged: All / Archived tabs in the Catalogs side list */\n.ctl-nav .ctl-ntabs{height:40px;padding:0 4px;margin:0 0 8px;background:transparent}\n'
-css += '/* merged: 8px between the upload drop zone and "Remove duplicate records" */\n.bk-up + .bk-chk{margin-top:8px;display:flex;width:fit-content}\n'
+css += '/* merged: 12px between the upload drop zone and "Remove duplicate records" */\n.bk-up + .bk-chk{margin-top:12px;display:flex;width:fit-content}\n'
 css += '/* merged: 16px between an uploaded file and its errors; 8px from the error line to the rows to fix */\n.bk-fwrap{gap:16px}\n.bk-files + .tblwrap{margin-top:8px}\n'
 css += '/* merged: 16px between the browse section and Uploaded files */\n.bk-chk + .bk-files{margin-top:16px}\n'
 css = css.replace('--zvh:calc(1vh / .9);--zvw:calc(1vw / .9)', '--zvh:1vh;--zvw:1vw')
