@@ -5682,7 +5682,7 @@ const can = {
   archiveSuspend:() => ['sm','md','adm'].includes(T()) && !isTM(),
   requestSuspend:() => ['fin','sm','adm'].includes(T()) && !isTM(),
   override:      () => T() === 'md' && !isTM(),
-  requestOverride:() => ['sm','fin'].includes(T()) && !isTM(),
+  requestOverride:() => false,   // no override requests: only the MD applies an override
   trial:         () => ['rep','sm'].includes(T()) && tmCan('Accounts and onboarding'),
   extendTrial:   () => ['rep','sm','md'].includes(T()) && tmCan('Accounts and onboarding'),
   configure:     () => ['rep','sm'].includes(T()) && tmCan('Deal preparation'),
@@ -6228,7 +6228,6 @@ function buildWorld(){
   S.delegations = [{id:'LD-07', from:'Dev', to:'Shubham', start:8, end:15, active:false, by:'Dev'}];
   S.transfers = [{id:'TR-31', aid:A('Pebble Pay').id, from:'Riya', to:'Dev', by:'Riya', on:-3, reason:'Dev already manages their parent group.', status:'Waiting for MD'}];
   S.susReqs = [
-    {id:'SR-14', kind:'Override', aid:A('Konkan Agro').id, by:'Kavya', on:-1, reason:'Customer committed to pay by 28 Oct. Confirmed on call with their CFO.', until:14, max:500000, status:'Waiting for MD'},
     {id:'SR-12', kind:'Suspension', aid:A('Pebble Pay').id, by:'Arun', on:-2, reason:'No usage for 34 days and the customer asked to pause billing while they rebuild their app.', when:'Immediately', status:'Waiting for MD'}
   ];
   S.orgChanges = [
@@ -6243,7 +6242,6 @@ function buildWorld(){
     L(0,'Kiran','Team member','Prepared payment reminder for Konkan Farmer Connect','INV · Konkan','','','for Arun'),
     L(-1,'Tara','SKU Maker','Submitted urgent change request','CR-0142','₹0.18','₹0.19'),
     L(-1,'Arun','Sales Manager','Submitted deal for approval','Distributor Alerts'),
-    L(-1,'Kavya','Finance','Requested MD override','Konkan Agro'),
     L(-2,'Dev','Sales Rep','Recorded manual payment with proof','MP-301'),
     L(-2,'Arun','Sales Manager','Requested suspension','Pebble Pay'),
     L(-3,'Arun','Sales Manager','Sent deal back with 2 flagged lines','Zenith Bookings'),
@@ -8686,9 +8684,7 @@ function enrichSeed(){
   A('Halcyon Hotels').pendingChanges.push({id:'BC-21', area:'Billing', field:'Credit period · Guest Messaging', old:'30 days', next:'45 days', by:'Riya', on:-2, checker:'Finance, then MD', state:'Pending approval', wid:W('Guest Messaging').id, note:'Customer’s group treasury pays on a 45-day cycle.'});
   A('Cobalt Interiors').pendingChanges.push({id:'BC-22', area:'Billing', field:'GSTIN', old:A('Cobalt Interiors').tax.gstin, next:'07' + A('Cobalt Interiors').tax.pan + '1Z9', by:'Riya', on:-1, checker:'Finance', state:'Pending approval', note:'Corrected GSTIN from the customer’s registration certificate.'});
   A('Wren Studios').pendingChanges.push({id:'BC-23', area:'Billing', field:'GSTIN', old:A('Wren Studios').tax.gstin, next:A('Wren Studios').tax.gstin.slice(0, 13) + '7', by:'Dev', on:-1, checker:'Finance', state:'Pending approval', note:'New GSTIN after re-registration. KYC re-runs once approved.'});
-  S.susReqs.push({id:'SR-17', kind:'Override', aid:A('Copperleaf Retail').id, by:'Arun', on:-1, reason:'Contract dispute resolved; customer signed the revised terms on 19 Oct.', until:30, max:null, status:'Waiting for MD'});
   S.transfers.push({id:'TR-34', aid:A('Tidewater Energy').id, from:'Riya', to:'Shubham', by:'Riya', on:-1, reason:'Shubham is taking over energy and utilities accounts.', status:'Waiting for MD'});
-  S.susReqs.push({id:'SR-16', kind:'Override', aid:A('Zenith Travel').id, by:'Arun', on:0, reason:'Customer confirmed payment of ₹11.3 L on 24 Oct; finance head copied.', until:10, max:1500000, status:'Waiting for MD'});
   // documents customers or reps have uploaded for verification
   A('Brightside Retail').kycDocs = [{type:'GST certificate', name:'Brightside_GST_REG06.pdf', by:'Riya', on:-6, status:'Awaiting review'},{type:'PAN card', name:'Brightside_PAN.jpg', by:'Riya', on:-6, status:'Awaiting review'}];
   A('Juniper Labs').kycDocs = [{type:'Certificate of incorporation', name:'Juniper_COI.pdf', by:'Customer', on:-9, status:'Awaiting review'}];
