@@ -488,6 +488,8 @@ for old, new, n in [
     ("S.deals.filter(d => d.stage === 'Waiting for MD' && d.submitted <= eo", "S.deals.filter(d => apDealMine(d) && d.submitted <= eo", 2),
     ("VIEWS.appr6 = function(){\n  if (!can.admin() || isTM())", "VIEWS.appr6 = function(){\n  if (!can.apprRules() || isTM())", 1)]:
     B_JS = must_replace(B_JS, old, new, n)    # the dashboard's approvals follow Approval configuration: waiting on the viewer
+# Approval configuration: deals are approved by the MD (every group of the Create deal rule, and Otherwise, go to the MD)
+B_JS = must_replace(B_JS, "  'deal-create':  a6Base([a6G('any', [a6C('discount', 'gt', 30), a6C('value', 'gt', 4000000)], [['role:mgr'], ['role:md']]),\n                          a6G('any', [a6CL('discLim'), a6CL('valLim')], [['role:mgr']])], null, 'Meera Iyer', -9),", "  'deal-create':  a6Base([a6G('any', [a6C('discount', 'gt', 30), a6C('value', 'gt', 4000000)], [['role:md']]),   // deals are approved by the MD\n                          a6G('any', [a6CL('discLim'), a6CL('valLim')], [['role:md']])], {mode:'approve', levels:[{who:['role:md']}]}, 'Meera Iyer', -9),")
 import base64
 AC_HTML = open(ac_path, encoding='utf-8').read()
 # Actions in the embedded page: SKU approval and a new "Plans & add-ons" tab always show for the MD; plan and add-on

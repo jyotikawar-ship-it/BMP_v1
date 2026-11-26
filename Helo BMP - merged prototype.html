@@ -20180,8 +20180,8 @@ const a6CL = f => Object.assign(a6C(f, '', ''), {lims:Object.assign({}, A6_LIM_D
 const a6G = (match, conds, levels) => ({match, conds, levels:levels.map(who => ({who}))});
 function a6Base(groups, other, by, d){ return {on:true, groups, other:other || {mode:'approve', levels:[{who:['role:mgr']}]}, timing:{remind:'2', remindH:'0', escOn:true, esc:'5', escTo:['role:md']}, back:'start', reason:true, from:'now', fromDate:'', hist:by ? [{by, on:d, what:'Published'}] : []}; }
 const a6Rules = () => S.apprRules6 || (S.apprRules6 = {
-  'deal-create':  a6Base([a6G('any', [a6C('discount', 'gt', 30), a6C('value', 'gt', 4000000)], [['role:mgr'], ['role:md']]),
-                          a6G('any', [a6CL('discLim'), a6CL('valLim')], [['role:mgr']])], null, 'Meera Iyer', -9),
+  'deal-create':  a6Base([a6G('any', [a6C('discount', 'gt', 30), a6C('value', 'gt', 4000000)], [['role:md']]),   // deals are approved by the MD
+                          a6G('any', [a6CL('discLim'), a6CL('valLim')], [['role:md']])], {mode:'approve', levels:[{who:['role:md']}]}, 'Meera Iyer', -9),
   'sku-create':   a6Base([a6G('all', [a6C('country', 'none', '', ['India'])], [['kavya', 'arun']]), a6G('all', [a6C('product', 'any', '', ['Helo Clarity'])], [['role:md']])], null, 'Meera Iyer', -21),
   'pay-recon':    a6Base([a6G('all', [a6C('onlyFin', 'any', '', ['Yes'])], [['role:md']])], null, 'Meera Iyer', -14),
   'acct-archive': a6Base([a6G('all', [a6C('owed', 'gt', 0)], [['role:fin'], ['role:md']])], null, 'Meera Iyer', -12),
