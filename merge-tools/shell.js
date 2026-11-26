@@ -56,3 +56,14 @@ function fitRowMenus(){
     if (r.bottom > c.bottom - 4 && !m.classList.contains('up')) m.classList.add('up');
     else if (r.top < c.top + 4 && m.classList.contains('up')) m.classList.remove('up'); });
 }
+/* the folded sidebar names each icon on hover */
+function navTips(){
+  const off = document.body.dataset.side === 'off';
+  const tip = (el, l) => { if (!el) return; if (off) el.title = l; else el.removeAttribute('title'); };
+  document.querySelectorAll('#sidenav .navitem').forEach(b => tip(b, b.querySelector('span:not(.cnt)').textContent));
+  tip(document.querySelector('.side-brand'), 'Helo Business');
+  tip($('#usercard'), $('#uname').textContent);
+}
+const renderNavA = renderNav;
+renderNav = function(){ renderNavA(); navTips(); };
+new MutationObserver(navTips).observe(document.body, {attributes:true, attributeFilter:['data-side']});
