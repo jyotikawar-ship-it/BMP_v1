@@ -20166,7 +20166,7 @@ Object.assign(ACT, {
   'a5-wadd': t => { const p = a5P(t), k = (A5_FIELDS[S._a5.k] || []).find(x => x !== p.f), F = A5F[k]; p.when = {f:k, op:F.type === 'num' ? 'gt' : 'any', v:'', vals:[]}; a5Re(`[data-chg="a5-wf"][data-p="${t.dataset.p}"]`); },
   'a5-wdel': t => { a5P(t).when = null; a5Re(`[data-act="a5-wadd"][data-p="${t.dataset.p}"]`); },
   'a5-save': () => { const st = S._a5, E = a5Check(st); if (E.msg){ st.showErr = true; a5Re(); document.querySelector('.a5-ed .bad, .a5-ed .has-err')?.scrollIntoView({block:'center', behavior:'smooth'}); return; }
-    if (st.status === 'new' && !st.cfg.on) return;
+    st.cfg.on = true;
     const a = a5Act(st.k), live = a5Rules()[st.k], cfg = JSON.parse(JSON.stringify(st.cfg)), by = fullOf(meRaw().name);
     cfg.hist = [...((live || {}).hist || []), {by, on:0, what:live ? 'Changed' : 'Published'}];
     a5Rules()[st.k] = cfg; delete a5Drafts()[st.k];
@@ -20409,7 +20409,7 @@ function a6Builder(st){
   const numR = (key, v, unit) => `<span class="am-num a5-num sm${B('remind') ? ' bad' : ''}"><input class="inp" inputmode="numeric" data-inp="a6-t" data-key="${key}" value="${esc(v == null ? '' : v)}" aria-label="Remind after, ${unit}"><em>${unit}</em></span>`;
   const settings = `<section class="a6-rem"><span class="a6-remt">Reminder</span><div class="a5-in"><span>Remind the approver after</span>${numR('remind', T.remind, 'days')}${numR('remindH', T.remindH == null ? '0' : T.remindH, 'hours')}</div>${a5ErrHtml(B('remind'))}</section>`;
   const head = `<div class="a6-bh"><span class="a6-bi">${I('sliders',20)}</span><div class="a6-bt"><b>Rule builder</b><span>Groups are checked from top to bottom. The first one that matches decides who approves.</span></div></div>`;
-  const onRow = st.status === 'new' ? '' : `<div class="a6-onr"><span class="a6-gl">APPROVAL</span><button class="am-sw" role="switch" aria-checked="${c.on}" data-act="a6-toggle"><span class="switch" aria-checked="${c.on}"></span>${c.on ? 'On' : `Off · ${esc(a.name)} goes ahead without approval`}</button></div>`;
+  c.on = true; const onRow = '';   // a published rule always applies: there is no on/off switch (delete the rule to stop it)
   return `<div class="a6-wrap">
     ${notes.map(n => `<div class="am-note">${I('info',14)}<span>${esc(n)}</span></div>`).join('')}
     <section class="a6-card">${head}
@@ -20520,7 +20520,7 @@ Object.assign(ACT, {
   'a6-ladd': t => { const L = a6Lv(t); L.push({who:[]}); a6Re(`[data-act="a5-pick"][data-px="a6"][data-k="${t.dataset.k}"][data-i="${L.length - 1}"]`); },
   'a6-ldel': t => { a6Lv(t).splice(+t.dataset.i, 1); a6Re(`[data-act="a6-ladd"][data-k="${t.dataset.k}"]`); },
   'a6-save': () => { const st = S._a6, E = a6Check(st); if (E.msg){ st.showErr = true; const bg = st.cfg.groups.findIndex((g, gi) => Object.keys(E.bad).some(k => k === `g${gi}` || k.startsWith(`g${gi}c`) || k.startsWith(`g${gi}l`))); if (bg >= 0) st.act = bg; render(); document.querySelector('.a6-card .bad, .a6-wrap .has-err, .a6-wrap .am-err')?.scrollIntoView({block:'center', behavior:'smooth'}); return; }
-    if (st.status === 'new' && !st.cfg.on) return;
+    st.cfg.on = true;
     const a = a5Act(st.k), live = a6Rules()[st.k], cfg = JSON.parse(JSON.stringify(st.cfg, (k, v) => k === '_done' ? undefined : v));
     cfg.hist = [...((live || {}).hist || []), {by:fullOf(meRaw().name), on:0, what:live ? 'Changed' : 'Published'}];
     a6Rules()[st.k] = cfg; delete a6Drafts()[st.k]; log('Published approval rule (v3)', a.name); S._a6 = null; go('appr6');
