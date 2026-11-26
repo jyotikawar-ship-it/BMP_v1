@@ -5186,7 +5186,7 @@ html.ac-wait #view{visibility:hidden}   /* one top bar on every page: breadcrumb
 :where(html[data-src="b"]) .h2-ms[data-g="mus-sku"] .h2-msi:not(.all){padding-left:40px}
 :where(html[data-src="b"]) #h2-wlc .h2-lgk{flex-wrap:nowrap;gap:0 2px;justify-content:center}
 :where(html[data-src="b"]) #h2-wlc .h2-lgk button{flex:none;gap:6px;padding:0 6px 0 4px;font-size:13px}
-:where(html[data-src="b"]) .h2-crw2{flex:1;display:flex;flex-direction:column;min-height:0}
+:where(html[data-src="b"]) .h2-crw2{flex:1;display:flex;flex-direction:row;min-height:0}
 :where(html[data-src="b"]) .h2-cr{flex:1;display:flex;align-items:center;gap:14px;padding:0 24px;border:0;background:none;font:inherit;text-align:left;cursor:pointer;color:var(--text-primary)}
 :where(html[data-src="b"]) .h2-cr + .h2-cr{border-top:1px solid var(--border-subtle)}
 :where(html[data-src="b"]) .h2-cr:hover,:where(html[data-src="b"]) .h2-cr:focus-visible{background:var(--surface-muted)}
@@ -5262,12 +5262,14 @@ html.ac-wait #view{visibility:hidden}   /* one top bar on every page: breadcrumb
 :where(html[data-src="b"]) #h2-pfr .h2-lgk,:where(html[data-src="b"]) #h2-pfm .h2-lgk{flex-wrap:nowrap;gap:0 2px;justify-content:center}
 :where(html[data-src="b"]) #h2-pfr .h2-lgk button,:where(html[data-src="b"]) #h2-pfm .h2-lgk button{flex:none;gap:6px;padding:0 6px 0 4px;font-size:13px}
 :where(html[data-src="b"]) .h2-cr2{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:0;background:none;font:inherit;cursor:pointer;color:var(--text-primary)}
-:where(html[data-src="b"]) .h2-cr2 + .h2-cr2{border-top:1px solid var(--border-subtle)}
+:where(html[data-src="b"]) .h2-cr2 + .h2-cr2{border-left:1px solid var(--border-subtle)}
 :where(html[data-src="b"]) .h2-cr2:hover,:where(html[data-src="b"]) .h2-cr2:focus-visible{background:var(--surface-muted)}
 :where(html[data-src="b"]) .h2-cr2.none{cursor:default}
 :where(html[data-src="b"]) .h2-cr2.none:hover{background:none}
 :where(html[data-src="b"]) .h2-cr2 > span{font-size:14px;color:var(--text-secondary)}
-:where(html[data-src="b"]) .h2-cr2 > b{font-size:28px;line-height:1.15;font-weight:600}
+:where(html[data-src="b"]) .h2-cr2 > b{font-size:28px;line-height:1.15;font-weight:600;color:var(--danger-text)}
+:where(html[data-src="b"]) .h2-cr2.none > b{color:var(--text-primary)}
+:where(html[data-src="b"]) .h2-cr2 > span{text-align:center;padding:0 28px}
 :where(html[data-src="b"]) .h2-tt,:where(html[data-src="b"]) .cu-tip,:where(html[data-src="b"]) .st-tip,:where(html[data-src="b"]) .ch-tip{transition:none!important}
 :where(html[data-src="b"]) .h2-ssi{width:100%;border:0;background:none;font:inherit;text-align:left}
 :where(html[data-src="b"]) .h2-ssi:hover{background:var(--surface-muted)}
@@ -5275,7 +5277,7 @@ html.ac-wait #view{visibility:hidden}   /* one top bar on every page: breadcrumb
 :where(html[data-src="b"]) .h2-ssi .h2-ssn{flex:1;min-width:0}
 :where(html[data-src="b"]) .h2-ssi svg{color:var(--primary);flex:none}
 :where(html[data-src="b"]) .h2-cr2{position:relative}
-:where(html[data-src="b"]) .h2-cr2-ar{position:absolute;right:20px;top:50%;transform:translateY(-50%);display:flex;color:var(--text-secondary);font-style:normal}
+:where(html[data-src="b"]) .h2-cr2-ar{position:absolute;right:12px;top:12px;display:flex;color:var(--text-secondary);font-style:normal}
 :where(html[data-src="b"]) .h2-cr2:hover .h2-cr2-ar{color:var(--text-primary)}
 :where(html[data-src="b"]) .h2-apk-n{display:flex;align-items:center;gap:6px}
 :where(html[data-src="b"]) .h2-apk-x{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border:0;background:none;border-radius:4px;color:var(--text-secondary);cursor:pointer;padding:0;flex:none}
@@ -5284,11 +5286,13 @@ html.ac-wait #view{visibility:hidden}   /* one top bar on every page: breadcrumb
 :where(html[data-src="b"]) .h2-apk-r.open .h2-apk-x svg{transform:none}
 :where(html[data-src="b"]) .h2-pt tr.h2-apk-s td{background:var(--surface-muted);font-size:13px}
 :where(html[data-src="b"]) #h2-ap .h2-pt tr.h2-apk-s td.k{padding-left:52px}
-:where(html[data-src="b"]) .h2-ta{flex:1;min-height:0;display:flex;flex-direction:column}
+:where(html[data-src="b"]) .h2-ta{flex:1;min-height:0;display:flex;flex-direction:row}
 :where(html[data-src="b"]) .h2-tas{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
-:where(html[data-src="b"]) .h2-tas + .h2-tas{border-top:1px solid var(--border-subtle)}
+:where(html[data-src="b"]) .h2-tas + .h2-tas{border-left:1px solid var(--border-subtle)}
+:where(html[data-src="b"]) .h2-tas{min-width:0;padding:0 12px;text-align:center}
+:where(html[data-src="b"]) .h2-tas > b em{line-height:1}
 :where(html[data-src="b"]) .h2-tas > span{font-size:13px;line-height:18px;font-weight:500;color:var(--text-secondary)}
-:where(html[data-src="b"]) .h2-tas > b{font-size:30px;line-height:38px;font-weight:600;letter-spacing:-0.4px;color:var(--text-primary);display:flex;align-items:baseline;gap:8px}
+:where(html[data-src="b"]) .h2-tas > b{font-size:26px;line-height:34px;flex-wrap:wrap;justify-content:center;font-weight:600;letter-spacing:-0.4px;color:var(--text-primary);display:flex;align-items:baseline;gap:8px}
 :where(html[data-src="b"]) .h2-tas > b em{font-style:normal;font-size:13px;font-weight:500;letter-spacing:0;color:var(--text-secondary)}
 :where(html[data-src="b"]) .h2-mgt{display:flex;align-items:baseline;gap:8px;padding:2px 20px 0;flex-wrap:wrap}
 :where(html[data-src="b"]) .h2-mgt > span{font-size:13px;color:var(--text-secondary)}
@@ -6691,8 +6695,8 @@ function go(v, params = {}){
      Records are matched by name, since the module has its own copy of the sample data; a deal opens its workspace. */
   if (AC_IN.includes(v) && AC_PEOPLE.includes(S.user)){
     let to = Object.assign({v}, params);
-    if (v === 'deal' && params.id){ const d = S.deals.find(x => x.id === params.id), w = d && wsp(d.wid); to = w ? {v:'workspace', wsId:w.id, wsName:w.name} : {v:'accounts'}; }
-    else if (['workspace', 'trialcfg'].includes(v) && (params.id || params.wid)){ const w = wsp(params.id || params.wid); to = w ? {v, wsId:w.id, wsName:w.name} : {v:'accounts'}; }
+    if (v === 'deal' && params.id){ const d = S.deals.find(x => x.id === params.id); to = d ? {v:'deal', id:d.id} : {v:'accounts'}; }
+    else if (['workspace', 'trialcfg'].includes(v) && (params.id || params.wid)){ const w = wsp(params.id || params.wid); to = w ? Object.assign({}, params, {v, wsId:w.id, wsName:w.name}) : {v:'accounts'}; delete to.id; delete to.wid; }
     else if (['account', 'journey'].includes(v) && params.id){ const a = acct(params.id); to = a ? {v, accId:a.id, accName:a.name} : {v:'accounts'}; }
     else if (['plan', 'minv'].includes(v)) to = {v:'accounts'};
     v = 'accounts'; params = {}; S._acGo = {__to:to};
@@ -18526,8 +18530,8 @@ function h2GroupBars(cols){   // cols: [{name, parts:[{name, v, color}], tg?}] �
    EDIT DASHBOARD — drag widgets to reorder them inside a section, choose Small or Medium, remove, add back
    ===================================================================== */
 const H2_SECS = [['act', 'Alerts', ['ac']], ['rev', 'Revenue', ['rvs', 'rvt', 'rvm', 'rvc']], ['pay', 'Payments', ['pst', 'pod']], ['tr', 'Workspaces', ['wlc', 'trt', 'crw', 'ap']],
-  ['st', 'Performance', ['pfc', 'psm', 'pfm', 'pft', 'pft2', 'pfr']], ['us', 'Usage', ['cu', 'mud', 'mus']]];
-const H2_NAMES = {ac:'Alerts', rvs:'Total revenue', rvt:'Revenue over time', rvc:'Helo Clarity', rvm:'Helo Messaging', pst:'Payment status', pod:'Overdue invoices', trs:'Trials', wlc:'Workspace status', crw:'Critical workspaces', trt:'Trial workspaces', wps:'Workspace status', wpt:'Workspaces', ap:'Workspace performance', srp:'Sales rep performance', pfr:'Sales rep target', pft:'West team performance', pft2:'South team performance', psm:'Sales manager performance', pfm:'Manager target', pfc:'Company target', cu:'Helo Clarity usage', mud:'Helo Messaging usage', mus:'Top 10 SKUs'};
+  ['st', 'Performance', ['pfc', 'psm', 'pfm', 'pft', 'pfr']], ['us', 'Usage', ['cu', 'mud', 'mus']]];
+const H2_NAMES = {ac:'Alerts', rvs:'Total revenue', rvt:'Revenue over time', rvc:'Helo Clarity', rvm:'Helo Messaging', pst:'Payment status', pod:'Overdue invoices', trs:'Trials', wlc:'Workspace status', crw:'Critical workspaces', trt:'Trial workspaces', wps:'Workspace status', wpt:'Workspaces', ap:'Workspace performance', srp:'Sales rep performance', pfr:'Sales rep target', pft:'Team performance', psm:'Sales manager performance', pfm:'Manager target', pfc:'Company target', cu:'Helo Clarity usage', mud:'Helo Messaging usage', mus:'Top 10 SKUs'};
 const h2SecOf = id => H2_SECS.find(s => s[2].includes(id))[0];
 const h2SrcOf = key => { const d = h2Meta().dups.find(x => x.inst === key); return d ? d.src : key; };
 function h2Order(sec){   // the keys (widgets and their copies) in a section, in the order they're shown
@@ -18867,7 +18871,7 @@ Object.assign(ACT, {
     if (g === 'mus-sku'){ const M = h2MusU(), chs = MU_ORDER; cur = M.sku; allL = 'All SKUs';
       groups = chs.map(c => ({name:MU_NAME[c], ck:c, items:h2MusSkus([c]).map(x => ({k:x.k, name:x.name}))})); items = groups.flatMap(x => x.items); }
     if (g === 'pfp-rep'){ cur = h2UI().pfpReps || 'all'; items = h2PfPeople().map(r => ({k:r, name:fullOf(r)})); allL = 'All sales reps'; }
-    if (g === 'pft-rep' || g === 'pft2-rep'){ const id = g.split('-')[0], v = h2UI()[id + 'Reps']; cur = Array.isArray(v) && v.length ? v : 'all'; items = h2RepsOnly(h2TeamOf(H2_TEAM_MGR[id])).map(r => ({k:r, name:fullOf(r)})); allL = 'All sales reps'; }
+    if (g === 'pft-rep' || g === 'pft2-rep'){ const id = g.split('-')[0], v = h2UI()[id + 'Reps']; cur = Array.isArray(v) && v.length ? v : 'all'; items = h2RepsOnly(h2TeamOf(h2PftMgr() || me().name)).map(r => ({k:r, name:fullOf(r)})); allL = 'All sales reps'; }
     if (g === 'pft-prod'){ const v = h2UI().pftProd; cur = Array.isArray(v) && v.length ? v : 'all'; items = H2_PF.map(([k, n]) => ({k, name:n})); allL = 'All products'; }
     if (g === 'psm-rep'){ const v = h2UI().psmReps; cur = Array.isArray(v) && v.length ? v : 'all'; items = h2Mgrs().flatMap(m => h2TeamOf(m)).map(r => ({k:r, name:fullOf(r)})); allL = 'All sales reps'; }
     if (['trt-rep', 'cu-rep', 'psm-rep', 'pfp-rep'].includes(g) && !groups){ const gr = h2RepGroups(items); if (gr) groups = gr; }   // people from different teams are listed under their team
@@ -19144,7 +19148,7 @@ function h2CrShow(btn){
   const when = d => d === 0 ? 'Today' : `In ${d} day${d === 1 ? '' : 's'}`;
   p.dataset.k = k; p.setAttribute('aria-label', k === 'deal' ? 'Deal nearing expiry' : 'PO nearing expiry');
   p.innerHTML = `<div class="h2-crp-h"><span>${k === 'deal' ? 'Deal nearing expiry' : 'PO nearing expiry'}</span><span class="num">${L.length}</span></div>
-    <ul>${L.map(x => `<li><span class="h2-crp-n">${h2WsLink(x.w)}<em>${esc(x.a.name)}</em></span><span class="h2-crp-d${x.end - eo <= 7 ? ' dan-t' : ''}">${when(x.end - eo)}</span></li>`).join('')}</ul>`;
+    <ul>${L.map(x => `<li><span class="h2-crp-n"><button class="h2-wsl" data-act="go" data-r='${esc(JSON.stringify({v:'workspace', id:x.w.id, tab:'deals'}))}'>${esc(x.w.name)}</button><em>${esc(x.a.name)}</em></span><span class="h2-crp-d${x.end - eo <= 7 ? ' dan-t' : ''}">${when(x.end - eo)}</span></li>`).join('')}</ul>`;
   p.hidden = false;
   const r = btn.zRect(), w = p.offsetWidth, h = p.offsetHeight;
   let left = r.right + 8; if (left + w > zIW() - 12) left = r.left - w - 8; if (left < 12) left = 12;
@@ -19322,13 +19326,13 @@ H2W_DEF('crw', D => {
 });
 /* ---- Nov 25: review comments ---- */
 /* Workspace breakdown (was Workspace status) */
-H2_NAMES.wlc = 'Workspace breakdown';
+H2_NAMES.wlc = 'Non-converted workspaces';
 H2W_DEF('wlc', D => {
   const A = h2TrAll(D), inv = D.WS.filter(x => x.s && x.s.st === 'Invited').length, off = h2LgOff('wlc', 'd');
   const segs = H2_LC.map(([k, color]) => ({k, name:k, color, v:k === 'Invited' ? inv : A.filter(x => x.st === k).length})), vis = segs.filter(x => !off[x.k]), tot = sum(segs, x => x.v);
   const body = !tot ? `<div class="wg-b wg-none"><p class="pnote">No workspaces in ${esc(D.P.span)}.</p></div>`
     : `<div class="wg-b h2-dnv">${h2Donut(vis.map(x => Object.assign({}, x, {fmt:n => String(n), fmtx:n => plural(n, 'workspace')})), `<b class="num">${sum(vis, x => x.v)}</b>`, '')}${h2LgK('wlc', 'd', segs)}</div>`;
-  return `<article class="dw wg s h2w" id="h2-wlc" aria-label="Workspace breakdown"><header class="wg-h"><h3 class="wg-t">Workspace breakdown</h3></header>${body}</article>`;
+  return `<article class="dw wg s h2w" id="h2-wlc" aria-label="Non-converted workspaces"><header class="wg-h"><h3 class="wg-t">Non-converted workspaces</h3></header>${body}</article>`;
 });
 /* Critical workspaces: each row gets an arrow */
 H2W_DEF('crw', D => {
@@ -19408,8 +19412,8 @@ H2W_DEF('pfm', D => {
   return `<article class="dw wg s h2w" id="h2-pfm" aria-label="${p === 'sm' ? 'My team target' : 'Manager target'}"><header class="wg-h"><h3 class="wg-t">${p === 'sm' ? 'My team target' : 'Manager target'}</h3>${filt}</header>${h2PfBody('pfm', h2PfSum(h2TeamOf(m).map(n => h2PfOf(D, n))))}</article>`;
 });
 /* ---- Performance, top to bottom: company target · sales manager performance · manager target · one widget per team · sales rep target ---- */
-var H2_TEAM_MGR = {pft:'Arun', pft2:'Kabir'};
-const H2_TEAM_T = {pft:'West team performance', pft2:'South team performance'};
+var H2_TEAM_MGR = {};   // one Team performance widget now (team picker inside)
+const H2_TEAM_T = {pft:'Team performance'};
 const H2_TG_C = '#92999E';
 /* Sales manager performance (M, MD only): a target bar and an achieved bar per manager; product filter */
 H2W_DEF('psm', D => {
@@ -19435,25 +19439,40 @@ Object.assign(ACT, {
   'h2-psm-menu': t => { const cur = h2UI().psmView === 'ch' ? 'ch' : 'prod'; openMenu(t, [['prod', 'By product'], ['ch', 'By channel']].map(([k, n]) => ({label:n, act:'h2-psm-pick', attrs:`data-k="${k}"`, icon:cur === k ? 'tick' : 'blank'}))); },
   'h2-psm-pick': t => { closeMenu(); h2UI().psmView = t.dataset.k; h2Re('psm', '[data-act="h2-psm-menu"]'); }
 });
-/* one Team performance widget per sales manager (M): a group of product bars per rep, dashed line for the rep's target */
-Object.keys(H2_TEAM_MGR).forEach(id => H2W_DEF(id, D => {
-  const p = h2Persona(), mgr = H2_TEAM_MGR[id], title = H2_TEAM_T[id];
-  if (!(p === 'md' || (p === 'sm' && me().name === mgr))) return '';
-  const U = h2UI(), sel = U[id + 'Reps'], all = h2RepsOnly(h2TeamOf(mgr)), reps = Array.isArray(sel) && sel.length ? all.filter(n => sel.includes(n)) : all, off = h2LgOff(id, 'p');
-  const type = h2RvUI(id).type === 'table' ? 'table' : 'bar', X = reps.map(n => h2PfOf(D, n)), prods = H2_PF.filter(([k]) => !off[k]);
-  const lbl = reps.length === all.length ? 'All sales reps' : reps.length === 1 ? fullOf(reps[0]) : `${reps.length} sales reps`;
-  const head = `<div class="wg-fl">${h2PfBtn('h2-ms', lbl, 'Sales reps', id + '-rep')}${h2Toggle(id, type, [['bar', 'Chart', h2Ph('bar', 16)], ['table', 'Table', h2Ph('table', 16)]])}</div>`;
+/* Team performance (M): one widget for every team. "All teams" compares the teams with each other;
+   pick a team to see its sales reps. A Sales Manager sees their own team. Hover shows target, achieved and the split. */
+const h2PftMgr = () => { const p = h2Persona(), M = h2Mgrs(); if (p === 'sm') return me().name; const t = h2UI().pftTeam; return M.includes(t) ? t : null; };   // null: all teams
+const h2TeamName = m => H2_TEAM_NAME[m] || `${fullOf(m)}’s team`;
+H2W_DEF('pft', D => {
+  const p = h2Persona(); if (p !== 'md' && p !== 'sm') return '';
+  const U = h2UI(), mgr = h2PftMgr(), off = h2LgOff('pft', 'p'), prods = H2_PF.filter(([k]) => !off[k]), type = h2RvUI('pft').type === 'table' ? 'table' : 'bar';
+  let X, kind, repBtn = '';
+  if (!mgr){ kind = 'Team'; X = h2Mgrs().map(m => Object.assign({label:h2TeamName(m), short:h2TeamName(m)}, h2PfSum(h2TeamOf(m).map(n => h2PfOf(D, n))))); }
+  else { kind = 'Sales rep';
+    const all = h2RepsOnly(h2TeamOf(mgr)), sel = U.pftReps, reps = Array.isArray(sel) && sel.length ? all.filter(n => sel.includes(n)) : all;
+    X = reps.map(n => Object.assign({label:fullOf(n), short:fullOf(n).split(' ')[0]}, h2PfOf(D, n)));
+    repBtn = h2PfBtn('h2-ms', reps.length === all.length ? 'All sales reps' : reps.length === 1 ? fullOf(reps[0]) : `${reps.length} sales reps`, 'Sales reps', 'pft-rep'); }
+  const teamBtn = p === 'md' ? h2PfBtn('h2-pft-team', mgr ? h2TeamName(mgr) : 'All teams', 'Team') : '';
+  const head = `<div class="wg-fl">${teamBtn}${repBtn}${h2Toggle('pft', type, [['bar', 'Chart', h2Ph('bar', 16)], ['table', 'Table', h2Ph('table', 16)]])}</div>`;
   let body;
-  if (type === 'table'){ const m = v => h2Tv(v, money(v));
-    body = `<div class="h2-tw"><table class="tbl h2-pt"><thead><tr><th>Sales rep</th><th class="r">Target</th><th class="r">Achieved</th><th class="r">%</th>${H2_PF.map(([k, n]) => `<th class="r">${n}</th>`).join('')}</tr></thead><tbody>
+  if (!X.length) body = `<div class="wg-b wg-none"><p class="pnote">No sales reps picked.</p></div>`;
+  else if (type === 'table'){ const m = v => h2Tv(v, money(v));
+    body = `<div class="h2-tw"><table class="tbl h2-pt"><thead><tr><th>${kind}</th><th class="r">Target</th><th class="r">Achieved</th><th class="r">%</th>${H2_PF.map(([k, n]) => `<th class="r">${n}</th>`).join('')}</tr></thead><tbody>
       ${X.map(x => { const a = sum(H2_PF, ([k]) => x.got[k]), t = sum(H2_PF, ([k]) => x.tg[k]), pc = h2PctT(a, t);
-        return `<tr><td class="k">${esc(fullOf(x.n))}</td><td class="r num">${m(t)}</td><td class="r num"><b>${m(a)}</b></td><td class="r num ${pc >= 100 ? 'ok-t' : pc < 80 ? 'dan-t' : ''}">${pc}%</td>${H2_PF.map(([k]) => `<td class="r num">${m(x.got[k])}</td>`).join('')}</tr>`; }).join('')}</tbody></table></div>`; }
+        return `<tr><td class="k">${esc(x.label)}</td><td class="r num">${m(t)}</td><td class="r num"><b>${m(a)}</b></td><td class="r num ${pc >= 100 ? 'ok-t' : pc < 80 ? 'dan-t' : ''}">${pc}%</td>${H2_PF.map(([k]) => `<td class="r num">${m(x.got[k])}</td>`).join('')}</tr>`; }).join('')}</tbody></table></div>`; }
   else { const tt = x => { const t = sum(prods, ([k]) => x.tg[k]), a = sum(prods, ([k]) => x.got[k]);
-      return `<b>${esc(fullOf(x.n))}</b><span class="tg">Target<em>${exact(t)}</em></span><span class="t">Achieved<em>${exact(a)} · ${h2PctT(a, t)}%</em></span>${prods.map(([k, n, c]) => `<span><i style="background:${c}"></i>${n}<em>${exact(x.got[k])}</em></span>`).join('')}`; };
-    const cols = X.map(x => ({name:fullOf(x.n).split(' ')[0], tt:tt(x), parts:prods.map(([k, n, c]) => ({name:n, v:x.got[k], color:c})), tg:off.tg || !prods.length ? null : sum(prods, ([k]) => x.tg[k])}));
-    body = `<div class="wg-b"><div class="wg-chart">${prods.length && cols.length ? h2GroupBars(cols) : '<p class="pnote">Tick a product below to see it.</p>'}${h2LgK(id, 'p', [...h2PfParts(), H2_PF_TG], 'h2-lgkl h2-lgtg')}</div></div>`; }
-  return `<article class="dw wg m h2w" id="h2-${id}" aria-label="${title}"><header class="wg-h"><h3 class="wg-t">${title}</h3>${head}</header>${body}</article>`;
-}));
+      return `<b>${esc(x.label)}</b><span class="tg">Target<em>${exact(t)}</em></span><span class="t">Achieved<em>${exact(a)} · ${h2PctT(a, t)}%</em></span>${prods.map(([k, n, c]) => `<span><i style="background:${c}"></i>${n}<em>${exact(x.got[k])}</em></span>`).join('')}`; };
+    const cols = X.map(x => ({name:x.short, tt:tt(x), parts:prods.map(([k, n, c]) => ({name:n, v:x.got[k], color:c})), tg:off.tg || !prods.length ? null : sum(prods, ([k]) => x.tg[k])}));
+    body = `<div class="wg-b"><div class="wg-chart">${prods.length ? h2GroupBars(cols) : '<p class="pnote">Tick a product below to see it.</p>'}${h2LgK('pft', 'p', [...h2PfParts(), H2_PF_TG], 'h2-lgkl h2-lgtg')}</div></div>`; }
+  const ttl = p === 'sm' ? 'My team performance' : 'Team performance';
+  return `<article class="dw wg m h2w" id="h2-pft" aria-label="${ttl}"><header class="wg-h"><h3 class="wg-t">${ttl}</h3>${head}</header>${body}</article>`;
+});
+H2W_DEF('pft2', () => '');   // the South team now sits in Team performance (kept so saved layouts still draw)
+Object.assign(ACT, {
+  'h2-pft-team': t => { const cur = h2PftMgr() || 'all';
+    openMenu(t, [['all', 'All teams'], ...h2Mgrs().map(m => [m, h2TeamName(m)])].map(([k, n]) => ({label:n, act:'h2-pft-team-pick', attrs:`data-k="${k}"`, icon:cur === k ? 'tick' : 'blank'}))); },
+  'h2-pft-team-pick': t => { closeMenu(); const U = h2UI(); U.pftTeam = t.dataset.k === 'all' ? null : t.dataset.k; U.pftReps = null; h2Re('pft', '[data-act="h2-pft-team"]'); }
+});
 /* Manager target: a Sales Manager sees it as their own target; the MD picks a manager */
 H2W_DEF('pfm', D => {
   const p = h2Persona(); if (p === 'rep') return '';
@@ -19625,7 +19644,7 @@ window.addEventListener('scroll', e => { if (!(e.target.closest && e.target.clos
 let dsQ = false; new MutationObserver(() => { if (dsQ) return; dsQ = true; requestAnimationFrame(() => { dsQ = false; if (document.querySelector(DS_SCOPE + ':not([data-ds])')) dsEnhance(); if ($('#ds-pop') && !document.querySelector('.ds-btn[aria-expanded="true"]')) dsClose(); }); }).observe(document.getElementById('view') || document.body, {childList:true, subtree:true});
 /* each person sees only what's relevant to them; the MD sees everything */
 const H2_PERSONA_W = {
-  sm:  ['ac', 'rvs', 'rvt', 'rvm', 'rvc', 'pst', 'pod', 'wlc', 'trt', 'crw', 'ap', 'pfm', 'pft', 'pft2', 'pfr', 'cu', 'mud', 'mus'],
+  sm:  ['ac', 'rvs', 'rvt', 'rvm', 'rvc', 'pst', 'pod', 'wlc', 'trt', 'crw', 'ap', 'pfm', 'pft', 'pfr', 'cu', 'mud', 'mus'],
   rep: ['ac', 'rvs', 'rvt', 'rvm', 'rvc', 'pst', 'pod', 'wlc', 'trt', 'crw', 'ap', 'pfr', 'cu', 'mud', 'mus'],
   adm: ['ac', 'wlc', 'trt', 'crw', 'cu', 'mud', 'mus']};
 const h2Avail = id => { const p = h2Persona(), L = H2_PERSONA_W[p]; if (L && !L.includes(id)) return false;
