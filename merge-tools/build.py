@@ -429,6 +429,11 @@ patch_any("k === 'back' ? 'Send back to the SKU Maker' : 'Reject change request'
 
 patch_any(' : `<button class="btn btn-sec" style="height:40px" data-act="sku-as-maker" title="Creating SKUs is done by the SKU Maker">${I(\'user\',16)}Switch to SKU Maker to create</button>`}', ' : \'\'}')   # the older SKUs list: no "Switch to SKU Maker" button either
 
+# Catalog is optional on New SKU and SaaS feature setup: leaving it empty means no catalog, so there is no "No catalog" option
+patch_any("sel('cat', 'cat', [['__none__', 'No catalog'], ...nsCats().map(", "sel('cat', 'cat', [...nsCats().map(")
+patch_any('${N.free && (!N.cat || N.cat === \'__none__\') ? `<span class="hint">${N.cat ? \'This SKU stays unassigned. You can add it to a catalog later.\' : \'Choose No catalog to keep it unassigned.\'}</span>` : \'\'}', '${N.free && (!N.cat || N.cat === \'__none__\') ? `<span class="hint">Leave it empty to keep this SKU unassigned. You can add it to a catalog later.</span>` : \'\'}')
+patch_any("sel('cat', [['__none__', 'No catalog'], ...saasCats.map(", "sel('cat', [...saasCats.map(")
+
 # plans and add-on packs (embedded page): the approver comes from Approval configuration › Revise plan
 patchA('decl:pkDoc', "(T() === 'md')", "apPlanMine()")
 # its toasts sit top right like the portal's (the page's own are bottom centre)
@@ -499,6 +504,9 @@ css = cssmerge.merge_text(a_css, b_css)
 css += '\n/* merged: a table\'s hidden label (.sr) stays inside its scroll box, so a wide table never scrolls the whole page */\n.sk2-card > .tblscroll{position:relative}\n'
 css += '/* merged: the sticky cell holding an open row menu sits above the next rows, so the menu is never hidden */\ntd:has(> .sk2-mw > .sk2-catm){z-index:31}\n'
 css += '/* merged: All / Archived tabs in the Catalogs side list */\n.ctl-nav .ctl-ntabs{height:40px;padding:0 4px;margin:0 0 8px;background:transparent}\n'
+css += '/* merged: 8px between the upload drop zone and "Remove duplicate records" */\n.bk-up + .bk-chk{margin-top:8px;display:flex;width:fit-content}\n'
+css += '/* merged: 16px between an uploaded file and its errors; 8px from the error line to the rows to fix */\n.bk-fwrap{gap:16px}\n.bk-files + .tblwrap{margin-top:8px}\n'
+css += '/* merged: 16px between the browse section and Uploaded files */\n.bk-chk + .bk-files{margin-top:16px}\n'
 css = css.replace('--zvh:calc(1vh / .9);--zvw:calc(1vw / .9)', '--zvh:1vh;--zvw:1vw')
 head_a = A_HTML[:A_HTML.index('<style>')]
 tail_a = A_HTML[A_HTML.rindex('</script>') + len('</script>'):]
